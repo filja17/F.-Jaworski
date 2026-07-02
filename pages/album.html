@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Album</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/album.css">
+</head>
+<body>
+
+  <main id="album-root"></main>
+
+  <script src="../js/data.js"></script>
+  <script>
+    'use strict';
+    const params  = new URLSearchParams(window.location.search);
+    const albumId = params.get('id');
+    const album   = ALBUMS.find(a => a.id === albumId) || ALBUMS[0];
+    document.title = album.title;
+
+    function render() {
+      const root = document.getElementById('album-root');
+      root.className = 'album-page';
+
+      /* streaming links — fixed order, all clickable */
+      const platforms = [
+        { name: 'Spotify',     icon: '◉', action: 'Słuchaj'       },
+        { name: 'Apple Music', icon: '◎', action: 'Słuchaj'       },
+        { name: 'Bandcamp',    icon: '◈', action: 'Kup / Słuchaj' },
+        { name: 'SoundCloud',  icon: '◐', action: 'Słuchaj'       },
+      ];
+
+      /* match streaming entries from data by name */
+      function getUrl(platformName) {
+        if (!album.streaming) return null;
+        const found = album.streaming.find(s =>
+          s.name.toLowerCase().includes(platformName.toLowerCase())
+        );
+        return found ? found.url : null;
+      }
+
+      const streamLinks = platforms.map(p => {
+        const url = getUrl(p.name);
+        if (!url) return `
+          <div class="stream-link stream-link--inactive">
+            <span class="stream-icon">${p.icon}</span>
+            <div>
+              <span class="stream-name">${p.name}</span>
+              <span class="stream-action">niedostępny</span>
+            </div>
+          </div>`;
+        return `
+          <a class="stream-link" href="${url}" target="_blank" rel="noopener">
+            <span class="stream-icon">${p.icon}</span>
+            <div>
+              <span class="stream-name">${p.name}</span>
+              <span class="stream-action">${p.action}</span>
+            </div>
+          </a>`;
+      }).join('');
+
+
+
+      root.innerHTML = `
+
+        <a class="album-back" href="../index.html">wszystkie albumy</a>
+
+        <section class="album-hero">
+          <div class="album-hero-bg" id="hero-bg"></div>
+          <div class="album-hero-veil"></div>
+
+          <div class="album-hero-left">
+            <span class="album-eyebrow">${album.year}</span>
+            <h1 class="album-title-h">${album.title}</h1>
+            <p class="album-desc-h">${album.desc}</p>
+          </div>
+
+          <div class="album-hero-right">
+            <div class="album-hero-cover">
+              ${album.cover
+                ? `<img src="../${album.cover}" alt="${album.title}"
+                        onerror="this.outerHTML='<div class=\\'album-hero-cover-placeholder\\'>—</div>'">`
+                : `<div class="album-hero-cover-placeholder">—</div>`}
+            </div>
+          </div>
+        </section>
+
+        <div class="album-content">
+
+          <!-- left: tracklist only -->
+          <section class="album-tracks">
+            <span class="section-label">Tracklista</span>
+            <div class="tracklist">
+              ${album.tracks.map((tr, i) => `
+                <div class="tl-row">
+                  <span class="tl-num">${String(i+1).padStart(2,'0')}</span>
+                  <span class="tl-name">${tr.title}</span>
+                </div>`).join('')}
+            </div>
+          </section>
+
+          <!-- right: streaming + buy -->
+          <section class="album-streaming">
+            <span class="section-label">Słuchaj i kup</span>
+            <div class="streaming-grid">
+              ${streamLinks}
+
+            </div>
+          </section>
+
+        </div>
+      `;
+
+      if (album.bgs && album.bgs.length > 0) {
+        document.getElementById('hero-bg').style.backgroundImage =
+          `url('../${album.bgs[0]}')`;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
