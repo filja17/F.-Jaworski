@@ -229,60 +229,95 @@
 .pdot.active { background: rgba(240,237,232,0.7); height: 16px; border-radius: 2px; }
 .pdot:hover  { background: rgba(240,237,232,0.4); }
 
-/* responsive */
+/* ── MOBILE ── */
 @media (max-width: 768px) {
-  /* cover — bottom half, centred */
-  #cover-wrap {
-    left: 50%;
-    right: auto;
-    top: auto;
-    bottom: 5vh;
-    transform: translateX(-50%);
-    width: clamp(200px, 64vw, 320px);
-    transition: opacity 0.4s ease;
-  }
 
-  /* text panel — top half */
-  #text-panel {
-    left: 1.2rem;
-    right: 1.2rem;
-    top: 12vh;
-    bottom: auto;
-  }
+  /* frame is still sticky full-screen */
+  #frame { display: block; position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-  /* shield: dark top half so title readable */
+  /* background + shields */
   #text-shield {
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(8,8,8,0.97) 0%,
-      rgba(8,8,8,0.85) 38%,
-      rgba(8,8,8,0.2)  65%,
-      rgba(8,8,8,0.0)  100%
-    );
+    background: rgba(8,8,8,0.55);
   }
 
+  /* PHASE 1: title top half, cover bottom half */
+  /* text panel — top half */
+  #text-panel {
+    position: absolute;
+    left: 0; right: 0;
+    top: 0;
+    height: 50vh;
+    padding: 5vh 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    z-index: 3;
+  }
+
+  #album-meta { margin-bottom: 0.5rem; }
+
   #morph-title {
-    font-size: clamp(3rem, 12vw, 5rem);
-    letter-spacing: 0.03em;
+    font-size: clamp(2.8rem, 11vw, 4.8rem);
+    letter-spacing: 0.02em;
     line-height: 0.9;
   }
 
-  #text-morph { min-height: auto; }
+  /* cover — bottom half, centred */
+  #cover-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50vh;
+    bottom: 0;
+    right: auto;
+    width: auto !important;
+    height: 50vh;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    /* keep square within bottom half */
+    max-width: min(50vh, 90vw);
+    z-index: 3;
+    transition: opacity 0.4s ease;
+  }
+  #cover-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
 
-  #album-meta { margin-bottom: 0.6rem; }
-
-  /* tracks phase: cover hides, text expands */
-  .tracks-list {
-    max-height: 42vh;
+  /* PHASE 2: tracks — cover hidden, full screen text */
+  #morph-tracks {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 8vh 1.5rem 4vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
-  .tracks-list::-webkit-scrollbar { display: none; }
-  .album-desc-index { margin-bottom: 1rem; }
+  #morph-tracks::-webkit-scrollbar { display: none; }
 
+  .album-desc-index {
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .track-row { padding: 0.8rem 0; }
+  .track-name { font-size: 0.88rem; }
+
+  /* morph area fills frame */
+  #text-morph {
+    position: absolute;
+    inset: 0;
+    min-height: unset;
+  }
+
+  /* hide desktop elements */
   #progress-dots { display: none; }
-  #scroll-hint { display: none; }
+  #scroll-hint   { display: none; }
+  #album-tags    { display: none; }
+  #album-cta     { display: none; }
 }
 
 /* ── albums divider section (before journey) ── */
