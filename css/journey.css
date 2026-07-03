@@ -231,31 +231,33 @@
 
 /* responsive */
 @media (max-width: 768px) {
-  /* phase 1: title view — cover dominates top half */
+  /* cover — bottom half, centred */
   #cover-wrap {
-    right: 50%;
-    transform: translateX(50%);
-    top: 12vh;
-    width: clamp(200px, 60vw, 320px);
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 5vh;
+    transform: translateX(-50%);
+    width: clamp(200px, 64vw, 320px);
     transition: opacity 0.4s ease;
   }
 
-  /* text panel — bottom half */
+  /* text panel — top half */
   #text-panel {
     left: 1.2rem;
     right: 1.2rem;
-    top: auto;
-    bottom: 4vh;
+    top: 12vh;
+    bottom: auto;
   }
 
-  /* shield: dark bottom half always */
+  /* shield: dark top half so title readable */
   #text-shield {
     inset: 0;
     background: linear-gradient(
-      to top,
+      to bottom,
       rgba(8,8,8,0.97) 0%,
-      rgba(8,8,8,0.85) 40%,
-      rgba(8,8,8,0.3)  65%,
+      rgba(8,8,8,0.85) 38%,
+      rgba(8,8,8,0.2)  65%,
       rgba(8,8,8,0.0)  100%
     );
   }
@@ -263,22 +265,21 @@
   #morph-title {
     font-size: clamp(3rem, 12vw, 5rem);
     letter-spacing: 0.03em;
+    line-height: 0.9;
   }
 
-  /* when cover hidden (tracks phase): text can use full screen */
-  #text-morph { min-height: 60vh; }
+  #text-morph { min-height: auto; }
 
-  #album-meta { margin-bottom: 0.8rem; }
+  #album-meta { margin-bottom: 0.6rem; }
 
-  /* tracks: more space, scrollable */
+  /* tracks phase: cover hides, text expands */
   .tracks-list {
-    max-height: 55vh;
+    max-height: 42vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
   .tracks-list::-webkit-scrollbar { display: none; }
-
-  .album-desc-index { margin-bottom: 1.2rem; }
+  .album-desc-index { margin-bottom: 1rem; }
 
   #progress-dots { display: none; }
   #scroll-hint { display: none; }
