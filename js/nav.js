@@ -14,6 +14,12 @@
     drawer.classList.remove('open');
     burger.classList.remove('open');
     document.body.style.overflow = '';
+    /* restore portfolio label if visible */
+    const lbl = document.getElementById('intro-label');
+    if (lbl) {
+      lbl.style.display = '';
+      lbl.style.opacity = '1';
+    }
   }
 
   burger.addEventListener('click', () => drawer.classList.contains('open') ? shut() : open());
