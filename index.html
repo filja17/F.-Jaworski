@@ -51,6 +51,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(240,237,232,0.35);
+      transition: opacity 0.5s ease;
     }
 
     /* ── ALBUMS DIVIDER ── */
@@ -205,7 +206,7 @@
       // start cycling after first word shown
       setTimeout(tick, SHOW_MS);
 
-      // stop and fade out when user scrolls
+      // stop and fade out intro when user scrolls
       let dismissed = false;
       window.addEventListener('scroll', function onFirstScroll() {
         if (dismissed) return;
@@ -214,6 +215,17 @@
         intro.classList.add('done');
         setTimeout(() => { intro.style.display = 'none'; }, 600);
         window.removeEventListener('scroll', onFirstScroll);
+      }, { passive: true });
+
+      // hide portfolio label on any scroll, restore only at scroll=0
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          introLabel.style.opacity = '0';
+          introLabel.style.pointerEvents = 'none';
+        } else {
+          introLabel.style.opacity = '1';
+          introLabel.style.pointerEvents = 'auto';
+        }
       }, { passive: true });
 
       /* albums divider — fade in on scroll into view */
