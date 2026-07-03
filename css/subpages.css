@@ -286,6 +286,11 @@
   .pj-row { grid-template-columns: 1fr auto; gap: 1rem; }
   .pj-year, .pj-arrow { display: none; }
   .gl-row-img, .gl-row-placeholder { height: 20vh; }
+
+  /* lightbox — hide arrows, swipe only */
+  .lb-nav { display: none; }
+  #lightbox-img { max-width: 100vw; max-height: 80vh; }
+  #lightbox-counter { bottom: 1.5rem; }
 }
 
 /* link button for projects without tracklist */
