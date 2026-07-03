@@ -1,7 +1,7 @@
 'use strict';
 
 /* ── geometry ── */
-const STEP_PX         = 600;
+const STEP_PX         = window.innerWidth < 768 ? 320 : 600;
 const STEPS_PER_ALBUM = 5;
 const TOTAL_STEPS     = ALBUMS.length * STEPS_PER_ALBUM;
 const JOURNEY_H       = TOTAL_STEPS * STEP_PX + window.innerHeight;
@@ -121,11 +121,8 @@ function renderAlbum(album, idx) {
         </div>`).join('')}
     </div>`;
 
-  /* make whole cover + text panel clickable to album page */
   morphTracks.onclick = () => window.location.href = `pages/album.html?id=${album.id}`;
-
   morphQuote.textContent = '';
-
   setMorphLayer('title');
 
   document.querySelectorAll('.pdot').forEach((d, i) => {
@@ -158,8 +155,14 @@ function onScroll() {
 
   renderAlbum(album, albumIdx);
 
-  if (stepInAlbum < 1.2) setMorphLayer('title');
-  else                    setMorphLayer('tracks');
+  const isMobile = window.innerWidth < 768;
+  if (stepInAlbum < 1.2) {
+    setMorphLayer('title');
+    if (isMobile) coverWrap.style.opacity = '1';
+  } else {
+    setMorphLayer('tracks');
+    if (isMobile) coverWrap.style.opacity = '0'; /* hide cover on mobile when tracks show */
+  }
 
   const bgCount = album.bgs.length;
   let bgIdx = 0;
