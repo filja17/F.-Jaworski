@@ -231,15 +231,45 @@
 
 /* responsive */
 @media (max-width: 900px) {
-  #text-panel { left: 1.5rem; right: 1.5rem; bottom: 6vh; }
-  #text-shield { inset: 0; background: rgba(8,8,8,0.82); }
-  #morph-title { font-size: clamp(3rem, 12vw, 5rem); }
+  /* cover — large, top right, fixed */
   #cover-wrap {
-    right: 1.5rem; top: auto; bottom: calc(10vh + 38vw + 2rem);
+    right: 1.2rem;
+    top: 12vh;
     transform: none;
-    width: clamp(120px, 32vw, 220px);
+    width: clamp(140px, 38vw, 260px);
   }
+
+  /* text — bottom of screen, full width */
+  #text-panel {
+    left: 1.2rem;
+    right: 1.2rem;
+    top: auto;
+    bottom: 5vh;
+  }
+
+  /* shield covers whole screen so text is always readable */
+  #text-shield {
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(8,8,8,0.95) 0%,
+      rgba(8,8,8,0.6)  50%,
+      rgba(8,8,8,0.0)  100%
+    );
+  }
+
+  #morph-title {
+    font-size: clamp(2.8rem, 11vw, 4.5rem);
+    letter-spacing: 0.03em;
+  }
+
+  /* morph area shorter on mobile */
+  #text-morph { min-height: 35vh; }
+
+  #album-meta { margin-bottom: 0.8rem; }
+
   #progress-dots { display: none; }
+  #scroll-hint { display: none; }
 }
 
 /* ── albums divider section (before journey) ── */
