@@ -21,12 +21,6 @@ function closeOverlay() {
   /* scroll back to very top so intro/nicknames are visible */
   window.scrollTo({ top: 0, behavior: 'instant' });
   /* restore portfolio label */
-  const lbl = document.getElementById('intro-label');
-  if (lbl) {
-    lbl.style.display = '';
-    lbl.style.opacity = '1';
-    lbl.style.pointerEvents = 'auto';
-  }
 }
 
 overlayClose.addEventListener('click', closeOverlay);
