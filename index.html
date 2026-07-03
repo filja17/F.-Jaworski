@@ -222,15 +222,16 @@
       const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           albumsTitle.classList.add('visible');
+          /* hide portfolio only when albums section scrolls in */
+          introLabel.style.transition = 'opacity 0.5s ease';
           introLabel.style.opacity = '0';
           introLabel.style.pointerEvents = 'none';
-        } else {
-          /* only restore if intro is gone */
-          if (intro.style.display === 'none') {
-            introLabel.style.opacity = '0';
-          }
+        } else if (window.scrollY < 100) {
+          /* restore when scrolled back to top */
+          introLabel.style.opacity = '1';
+          introLabel.style.pointerEvents = 'auto';
         }
-      }, { threshold: 0.2 });
+      }, { threshold: 0.15 });
       observer.observe(document.getElementById('albums-section'));
     })();
   </script>
