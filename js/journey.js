@@ -80,6 +80,8 @@ function renderAlbum(album, idx) {
 
   /* cover — fixed position, no movement */
   coverImg.style.opacity = '0';
+  coverWrap.style.opacity = '1';
+  coverWrap.style.pointerEvents = 'auto';
 
   setTimeout(() => {
     if (album.cover) {
@@ -158,10 +160,13 @@ function onScroll() {
   const isMobile = window.innerWidth < 768;
   if (stepInAlbum < 1.2) {
     setMorphLayer('title');
-    if (isMobile) coverWrap.style.opacity = '1';
+    coverWrap.style.opacity = '1';
   } else {
     setMorphLayer('tracks');
-    if (isMobile) coverWrap.style.opacity = '0'; /* hide cover on mobile when tracks show */
+    if (isMobile) {
+      coverWrap.style.opacity = '0';
+      coverWrap.style.pointerEvents = 'none';
+    }
   }
 
   const bgCount = album.bgs.length;
