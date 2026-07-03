@@ -78,16 +78,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-    #albums-sub {
-      position: absolute;
-      bottom: 3rem;
-      right: 5vw;
-      font-size: 0.6rem;
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(240,237,232,0.2);
-    }
   </style>
 </head>
 <body>
@@ -126,7 +116,6 @@
   <!-- albums divider section -->
   <div id="albums-section">
     <div id="albums-title">Albumy</div>
-    <div id="albums-sub">przewijaj</div>
   </div>
 
   <!-- scroll journey -->
@@ -229,9 +218,19 @@
 
       /* albums divider — fade in on scroll into view */
       const albumsTitle = document.getElementById('albums-title');
+      const introLabel  = document.getElementById('intro-label');
       const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) albumsTitle.classList.add('visible');
-      }, { threshold: 0.3 });
+        if (entries[0].isIntersecting) {
+          albumsTitle.classList.add('visible');
+          introLabel.style.opacity = '0';
+          introLabel.style.pointerEvents = 'none';
+        } else {
+          /* only restore if intro is gone */
+          if (intro.style.display === 'none') {
+            introLabel.style.opacity = '0';
+          }
+        }
+      }, { threshold: 0.2 });
       observer.observe(document.getElementById('albums-section'));
     })();
   </script>
