@@ -18,8 +18,15 @@ function openOverlay(page, extra) {
 function closeOverlay() {
   overlay.classList.remove('visible');
   document.body.style.overflow = '';
+  /* scroll back to very top so intro/nicknames are visible */
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  /* restore portfolio label */
   const lbl = document.getElementById('intro-label');
-  if (lbl) lbl.style.display = '';
+  if (lbl) {
+    lbl.style.display = '';
+    lbl.style.opacity = '1';
+    lbl.style.pointerEvents = 'auto';
+  }
 }
 
 overlayClose.addEventListener('click', closeOverlay);
@@ -253,17 +260,37 @@ document.getElementById('lb-prev').addEventListener('click', lbPrev);
 document.getElementById('lb-next').addEventListener('click', lbNext);
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
 
-/* ── touch swipe for lightbox (mobile) ── */
+/* ── touch swipe for lightbox — smooth with momentum ── */
 (function() {
-  let touchStartX = 0;
+  let startX = 0, startY = 0, dragging = false;
+  let offsetX = 0;
+
   lightbox.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    offsetX = 0;
+    dragging = true;
+    lbImg.style.transition = 'none';
   }, { passive: true });
+
+  lightbox.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (Math.abs(dy) > Math.abs(dx)) return; // vertical scroll, ignore
+    offsetX = dx;
+    lbImg.style.transform = `translateX(${dx * 0.4}px)`;
+  }, { passive: true });
+
   lightbox.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) < 40) return; // ignore taps
-    if (dx < 0) lbNext();
-    else         lbPrev();
+    if (!dragging) return;
+    dragging = false;
+    lbImg.style.transition = 'transform 0.3s ease, opacity 0.22s ease';
+    lbImg.style.transform = 'translateX(0)';
+    if (Math.abs(offsetX) > 50) {
+      if (offsetX < 0) lbNext();
+      else             lbPrev();
+    }
   }, { passive: true });
 })();
 
