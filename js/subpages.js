@@ -18,6 +18,8 @@ function openOverlay(page, extra) {
 function closeOverlay() {
   overlay.classList.remove('visible');
   document.body.style.overflow = '';
+  const lbl = document.getElementById('intro-label');
+  if (lbl) lbl.style.display = '';
 }
 
 overlayClose.addEventListener('click', closeOverlay);
@@ -250,6 +252,20 @@ document.getElementById('lightbox-close').addEventListener('click', closeLightbo
 document.getElementById('lb-prev').addEventListener('click', lbPrev);
 document.getElementById('lb-next').addEventListener('click', lbNext);
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+/* ── touch swipe for lightbox (mobile) ── */
+(function() {
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 40) return; // ignore taps
+    if (dx < 0) lbNext();
+    else         lbPrev();
+  }, { passive: true });
+})();
 
 /* ── mini placeholder ── */
 function placeholderMini(album) {
