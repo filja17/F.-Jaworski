@@ -1,7 +1,8 @@
 'use strict';
 
 /* ── geometry ── */
-const STEP_PX         = window.innerWidth < 768 ? 320 : 600;
+const IS_MOBILE       = () => window.innerWidth < 768;
+const STEP_PX         = IS_MOBILE() ? 300 : 600;
 const STEPS_PER_ALBUM = 5;
 const TOTAL_STEPS     = ALBUMS.length * STEPS_PER_ALBUM;
 const JOURNEY_H       = TOTAL_STEPS * STEP_PX + window.innerHeight;
@@ -59,12 +60,11 @@ function buildDots() {
   });
 }
 
-/* ── show background ── */
+/* ── show background — slow transition ── */
 function showBg(albumIdx, bgIdx) {
   const key = `${albumIdx}-${bgIdx}`;
   if (`${currentAlbumIdx}-${currentBgIdx}` === key) return;
   currentBgIdx = bgIdx;
-
   bgLayers.forEach(layer => {
     const match =
       parseInt(layer.dataset.albumIdx) === albumIdx &&
@@ -78,34 +78,28 @@ function renderAlbum(album, idx) {
   if (currentAlbumIdx === idx) return;
   currentAlbumIdx = idx;
 
-  /* cover — hide immediately, show only after image loaded */
-  coverWrap.style.opacity = '0';
-  coverWrap.style.pointerEvents = 'none';
+  /* hide cover — show only after new image loads to prevent flash */
+  coverImg.style.opacity = '0';
 
   if (album.cover) {
-    const tempImg = new Image();
-    tempImg.onload = () => {
-      coverImg.src = album.cover;
-      coverImg.alt = album.title;
-      coverImg.style.display = 'block';
+    const tmp = new Image();
+    tmp.onload = () => {
+      coverImg.src   = album.cover;
+      coverImg.alt   = album.title;
+      coverImg.style.display  = 'block';
+      coverImg.style.opacity  = '1';
       coverPlaceholder.style.display = 'none';
-      coverWrap.style.opacity = '1';
-      coverWrap.style.pointerEvents = 'auto';
     };
-    tempImg.onerror = () => {
+    tmp.onerror = () => {
       coverImg.style.display = 'none';
       coverPlaceholder.style.display = 'block';
       coverPlaceholder.innerHTML = makePlaceholderSVG(album);
-      coverWrap.style.opacity = '1';
-      coverWrap.style.pointerEvents = 'auto';
     };
-    tempImg.src = album.cover;
+    tmp.src = album.cover;
   } else {
     coverImg.style.display = 'none';
     coverPlaceholder.style.display = 'block';
     coverPlaceholder.innerHTML = makePlaceholderSVG(album);
-    coverWrap.style.opacity = '1';
-    coverWrap.style.pointerEvents = 'auto';
   }
 
   coverWrap.onclick = () => {
@@ -114,16 +108,13 @@ function renderAlbum(album, idx) {
 
   albumNumber.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(ALBUMS.length).padStart(2, '0')}`;
   albumYear.textContent   = album.year;
-
   albumCta.href = `pages/album.html?id=${album.id}`;
 
-  /* title — each word on its own line */
   morphTitle.innerHTML = album.title
     .split(' ')
     .map(w => `<span>${w}</span>`)
     .join('');
 
-  /* desc + tracks combined in morphTracks panel */
   morphTracks.innerHTML = `
     <p class="album-desc-index">${album.desc}</p>
     <div class="tracks-list">
@@ -136,7 +127,16 @@ function renderAlbum(album, idx) {
 
   morphTracks.onclick = () => window.location.href = `pages/album.html?id=${album.id}`;
   morphQuote.textContent = '';
+
+  /* always start at title when album changes */
+  currentLayer = ''; /* force reset */
   setMorphLayer('title');
+
+  /* on mobile: always show cover when album first renders */
+  if (IS_MOBILE()) {
+    coverWrap.style.opacity = '1';
+    coverWrap.style.pointerEvents = 'auto';
+  }
 
   document.querySelectorAll('.pdot').forEach((d, i) => {
     d.classList.toggle('active', i === idx);
@@ -168,23 +168,26 @@ function onScroll() {
 
   renderAlbum(album, albumIdx);
 
-  if (stepInAlbum < 1.2) {
+  /* morph phase */
+  if (stepInAlbum < 1.5) {
     setMorphLayer('title');
-    if (window.innerWidth < 768) {
-      coverWrap.style.opacity = '1';
+    if (IS_MOBILE()) {
+      coverWrap.style.opacity      = '1';
+      coverWrap.style.pointerEvents = 'auto';
     }
   } else {
     setMorphLayer('tracks');
-    if (window.innerWidth < 768) {
-      coverWrap.style.opacity = '0';
+    if (IS_MOBILE()) {
+      coverWrap.style.opacity      = '0';
       coverWrap.style.pointerEvents = 'none';
     }
   }
 
+  /* background crossfade — only change at step boundaries to avoid rapid switching */
   const bgCount = album.bgs.length;
   let bgIdx = 0;
-  if (stepInAlbum >= 2 && bgCount > 1) bgIdx = 1;
-  if (stepInAlbum >= 3 && bgCount > 2) bgIdx = 2;
+  if (stepInAlbum >= 2.5 && bgCount > 1) bgIdx = 1;
+  if (stepInAlbum >= 3.5 && bgCount > 2) bgIdx = 2;
   showBg(albumIdx, bgIdx);
 }
 
