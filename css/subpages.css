@@ -224,6 +224,7 @@
   position: fixed; inset: 0; z-index: 500;
   background: rgba(8,8,8,0.97);
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
@@ -231,7 +232,7 @@
 #lightbox-img {
   max-width: 90vw; max-height: 90vh;
   object-fit: contain; display: block;
-  transition: opacity 0.22s ease;
+  will-change: transform;
 }
 #lightbox-close {
   position: absolute; top: 2rem; right: 2.5rem;
