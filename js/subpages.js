@@ -230,22 +230,38 @@ let lbGallery = GALLERY;
 function openLightbox(idx, gallery) {
   lbGallery = gallery || GALLERY;
   lbIdx = idx;
-  showLbImage();
+  showLbImage(null);
   lightbox.classList.add('visible');
 }
 function closeLightbox() {
   lightbox.classList.remove('visible');
 }
-function lbNext() { lbIdx = (lbIdx + 1) % lbGallery.length; showLbImage(); }
-function lbPrev() { lbIdx = (lbIdx - 1 + lbGallery.length) % lbGallery.length; showLbImage(); }
+function lbNext() { lbIdx = (lbIdx + 1) % lbGallery.length; showLbImage('next'); }
+function lbPrev() { lbIdx = (lbIdx - 1 + lbGallery.length) % lbGallery.length; showLbImage('prev'); }
 
-function showLbImage() {
+function showLbImage(dir) {
   const g = lbGallery[lbIdx];
-  lbImg.style.opacity = '0';
-  setTimeout(() => {
+  const slideOut = dir === 'next' ? '-100vw' : '100vw';
+  const slideIn  = dir === 'next' ? '100vw'  : '-100vw';
+
+  if (dir) {
+    /* slide current image out */
+    lbImg.style.transition = 'transform 0.28s cubic-bezier(0.4,0,0.2,1)';
+    lbImg.style.transform  = `translateX(${slideOut})`;
+    setTimeout(() => {
+      lbImg.src = g.src || '';
+      lbImg.style.transition = 'none';
+      lbImg.style.transform  = `translateX(${slideIn})`;
+      /* force reflow */
+      lbImg.offsetHeight;
+      lbImg.style.transition = 'transform 0.28s cubic-bezier(0.4,0,0.2,1)';
+      lbImg.style.transform  = 'translateX(0)';
+    }, 280);
+  } else {
+    /* first open — no animation */
     lbImg.src = g.src || '';
-    lbImg.style.opacity = '1';
-  }, 160);
+    lbImg.style.transform = 'translateX(0)';
+  }
   lbCounter.textContent = `${lbIdx + 1} / ${lbGallery.length}`;
 }
 
@@ -279,7 +295,7 @@ lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightb
   lightbox.addEventListener('touchend', e => {
     if (!dragging) return;
     dragging = false;
-    lbImg.style.transition = 'transform 0.3s ease, opacity 0.22s ease';
+    lbImg.style.transition = 'transform 0.28s cubic-bezier(0.4,0,0.2,1)';
     lbImg.style.transform = 'translateX(0)';
     if (Math.abs(offsetX) > 50) {
       if (offsetX < 0) lbNext();
