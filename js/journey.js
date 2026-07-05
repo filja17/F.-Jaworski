@@ -54,7 +54,8 @@ function buildDots() {
     dot.className = 'pdot';
     dot.title = album.title;
     dot.addEventListener('click', () => {
-      window.scrollTo({ top: i * STEPS_PER_ALBUM * STEP_PX + 1, behavior: 'smooth' });
+      const journeyStart = window.innerHeight * 2;
+      window.scrollTo({ top: journeyStart + i * STEPS_PER_ALBUM * STEP_PX + 1, behavior: 'smooth' });
     });
     progressDots.appendChild(dot);
   });
@@ -161,7 +162,11 @@ function onScroll() {
     scrollHint.classList.add('hidden');
   }
 
-  const globalStep  = scrollY / STEP_PX;
+  /* subtract intro-section + albums-section (each 100vh = window.innerHeight) */
+  const journeyStart  = window.innerHeight * 2;
+  const journeyScroll = Math.max(0, scrollY - journeyStart);
+
+  const globalStep  = journeyScroll / STEP_PX;
   const albumIdx    = Math.min(Math.floor(globalStep / STEPS_PER_ALBUM), ALBUMS.length - 1);
   const stepInAlbum = globalStep - albumIdx * STEPS_PER_ALBUM;
   const album       = ALBUMS[albumIdx];
@@ -172,21 +177,21 @@ function onScroll() {
   if (stepInAlbum < 1.5) {
     setMorphLayer('title');
     if (IS_MOBILE()) {
-      coverWrap.style.opacity      = '1';
+      coverWrap.style.opacity       = '1';
       coverWrap.style.pointerEvents = 'auto';
     }
   } else {
     setMorphLayer('tracks');
     if (IS_MOBILE()) {
-      coverWrap.style.opacity      = '0';
+      coverWrap.style.opacity       = '0';
       coverWrap.style.pointerEvents = 'none';
     }
   }
 
-  /* background crossfade — only change at step boundaries to avoid rapid switching */
+  /* background crossfade at safe boundaries */
   const bgCount = album.bgs.length;
   let bgIdx = 0;
-  if (stepInAlbum >= 2.5 && bgCount > 1) bgIdx = 1;
+  if (stepInAlbum >= 2 && bgCount > 1) bgIdx = 1;
   if (stepInAlbum >= 3.5 && bgCount > 2) bgIdx = 2;
   showBg(albumIdx, bgIdx);
 }
