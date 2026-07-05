@@ -188,59 +188,68 @@
 /* ── MOBILE ── */
 @media (max-width: 768px) {
 
-  /* cover — top half, centred */
+  /* cover: centred, top portion, large */
   #cover-wrap {
     position: absolute;
     left: 50%;
     right: auto;
-    top: 6vh;
+    top: 5vh;
     transform: translateX(-50%);
-    width: min(72vw, 54vh);
+    width: min(75vw, 52vh);
     transition: opacity 0.4s ease;
   }
 
-  /* text — bottom, full width, dark background */
+  /* shield: gradient dark from bottom so text readable */
+  #text-shield {
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(8,8,8,0.98) 0%,
+      rgba(8,8,8,0.75) 38%,
+      rgba(8,8,8,0.15) 65%,
+      rgba(8,8,8,0.0)  100%
+    );
+  }
+
+  /* text panel: anchored to bottom */
   #text-panel {
     position: absolute;
     left: 0; right: 0;
     top: auto;
     bottom: 0;
-    padding: 2vh 1.4rem 3vh;
-    background: linear-gradient(to top, rgba(8,8,8,1) 70%, rgba(8,8,8,0) 100%);
+    padding: 0 1.4rem 4vh;
   }
 
-  /* shield: full screen dark */
-  #text-shield {
-    inset: 0;
-    background: rgba(8,8,8,0.35);
-  }
+  #album-meta { margin-bottom: 0.4rem; }
 
-  #album-meta { margin-bottom: 0.5rem; }
-
+  /* title: single line flow, no forced line breaks */
   #morph-title {
-    font-size: clamp(2.6rem, 10vw, 4.2rem);
-    letter-spacing: 0.02em; line-height: 0.92;
+    font-size: clamp(2.8rem, 11vw, 4.5rem);
+    letter-spacing: 0.02em;
+    line-height: 0.92;
   }
   #morph-title span { display: inline; }
   #morph-title span + span::before { content: ' '; }
 
-  /* morph area: auto height */
   #text-morph { min-height: unset; position: relative; }
 
-  /* tracks: scrollable within panel */
+  /* tracks phase: scrollable, full height */
   #morph-tracks {
     position: relative;
-    padding-top: 0.2rem;
-    max-height: 44vh;
+    max-height: 52vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
   }
   #morph-tracks::-webkit-scrollbar { display: none; }
 
-  .album-desc-index { font-size: 0.82rem; margin-bottom: 1rem; max-width: 100%; }
-  .track-row { padding: 0.7rem 0; }
-  .track-name { font-size: 0.86rem; }
+  .album-desc-index {
+    font-size: 0.82rem;
+    margin-bottom: 1.2rem;
+    max-width: 100%;
+  }
+  .track-row { padding: 0.75rem 0; }
+  .track-name { font-size: 0.88rem; }
 
   #progress-dots { display: none; }
   #scroll-hint   { display: none; }
