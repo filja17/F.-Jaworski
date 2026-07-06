@@ -8,6 +8,13 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* wymusza własną warstwę kompozytową — naprawia flickering/
+     "wyskakiwanie na wierzch" position:fixed na iOS Safari */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 #bg-stack { position: absolute; inset: 0; }
 
@@ -36,6 +43,12 @@
 
 /* ── TITLE SECTION — full viewport ── */
 .js-title {
+  position: relative;   /* KLUCZOWE: bez tego #frame (position:fixed) potrafi
+                            wyrenderować się NAD tytułem/okładkami — bo elementy
+                            bez position są malowane w CSS w innej "warstwie"
+                            niż elementy pozycjonowane (fixed), niezależnie
+                            od kolejności w DOM. Stąd efekt "znikania" tekstu. */
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -70,6 +83,9 @@
 
 /* ── CONTENT SECTION — cover + tracks ── */
 .js-content {
+  position: relative;  /* patrz komentarz przy .js-title — ta sama poprawka,
+                           dotyczy okładek albumów i tracklisty */
+  z-index: 1;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
