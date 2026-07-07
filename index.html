@@ -90,6 +90,15 @@
 </head>
 <body>
 
+  <!-- fixed-look background, positioned via JS (see journey.js) — 
+       nie używamy natywnego position:fixed, bo iOS Safari potrafi go
+       błędnie przerysować podczas scrolla (miganie / "znikanie" treści) -->
+  <div id="frame">
+    <div id="bg-stack"></div>
+    <div id="text-shield"></div>
+    <div id="bg-veil"></div>
+  </div>
+
   <!-- nav -->
   <nav id="nav">
     <ul class="nav-links">
@@ -128,36 +137,8 @@
     <div id="albums-title">Albumy</div>
   </div>
 
-  <!-- scroll journey -->
-  <div id="journey">
-    <div id="frame">
-      <div id="bg-stack"></div>
-      <div id="text-shield"></div>
-      <div id="bg-veil"></div>
-      <div id="cover-wrap">
-        <img id="cover-img" src="" alt="" draggable="false">
-        <div id="cover-placeholder"></div>
-      </div>
-      <div id="text-panel">
-        <div id="album-meta">
-          <span id="album-number"></span>
-          <span id="album-year"></span>
-        </div>
-        <div id="text-morph">
-          <div id="morph-title"  class="morph-layer"></div>
-          <div id="morph-tracks" class="morph-layer"></div>
-          <div id="morph-quote"  class="morph-layer"></div>
-        </div>
-        <div id="album-tags"></div>
-        <a id="album-cta" href="#">Zobacz album</a>
-      </div>
-      <div id="scroll-hint">
-        <span>scroll</span>
-        <div class="scroll-line"></div>
-      </div>
-      <div id="progress-dots"></div>
-    </div>
-  </div>
+  <!-- scroll journey — sekcje (.js-title / .js-content) dokładane tu przez journey.js -->
+  <div id="journey"></div>
 
   <!-- overlay -->
   <div id="overlay">
