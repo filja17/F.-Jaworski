@@ -1,19 +1,34 @@
 'use strict';
 
-/* ══════════════════════════════════════
-   journey.js
-   - Każdy album = dwie sekcje w normalnym flow DOM
-   - Tła fixed, crossfade przez IntersectionObserver
-   - Zero sticky, zero morph, zero fade na treści
-══════════════════════════════════════ */
-
 const bgStack = document.getElementById('bg-stack');
 const journey = document.getElementById('journey');
+const frame   = document.getElementById('frame');
 
-/* ── tła ── */
+/* ── Pozycjonowanie tła chroniące przed błędami Safari na iOS ── */
+(function pinFrame() {
+  if (!frame) return;
+  let ticking = false;
+  function update() {
+    frame.style.transform = `translateY(${window.scrollY}px)`;
+    ticking = false;
+  }
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('orientationchange', update);
+  update();
+})();
+
+/* ── Generowanie warstw tła ── */
 let bgLayers = [];
 
 function buildBgLayers() {
+  if (!bgStack || typeof ALBUMS === 'undefined') return;
   ALBUMS.forEach((album, ai) => {
     album.bgs.forEach((src, bi) => {
       const div = document.createElement('div');
@@ -36,11 +51,12 @@ function showBg(ai, bi) {
   });
 }
 
-/* ── sekcje albumów ── */
+/* ── Budowanie sekcji produktowych ── */
 function buildSections() {
+  if (!journey || typeof ALBUMS === 'undefined') return;
+  
   ALBUMS.forEach((album, ai) => {
-
-    /* SEKCJA 1: tytuł — pełen ekran */
+    /* SEKCJA 1: Tytuł albumu */
     const titleSec = document.createElement('div');
     titleSec.className = 'js-title';
     titleSec.dataset.ai = ai;
@@ -53,7 +69,7 @@ function buildSections() {
       <h2 class="jt-title">${album.title}</h2>`;
     journey.appendChild(titleSec);
 
-    /* SEKCJA 2: cover + tracks */
+    /* SEKCJA 2: Okładka i spis utworów */
     const contentSec = document.createElement('div');
     contentSec.className = 'js-content';
     contentSec.dataset.ai = ai;
@@ -76,8 +92,10 @@ function buildSections() {
   });
 }
 
-/* ── IntersectionObserver: zmiana tła gdy sekcja wchodzi w widok ── */
+/* ── Skrzyżowanie widoczności (IntersectionObserver) dla płynnych przejść tła ── */
 function initObserver() {
+  if (typeof ALBUMS === 'undefined') return;
+  
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
@@ -87,13 +105,13 @@ function initObserver() {
       const bgIdx = (bi === 0 || album.bgs.length < 2) ? 0 : 1;
       showBg(ai, bgIdx);
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.35 });
 
   document.querySelectorAll('.js-title, .js-content').forEach(s => obs.observe(s));
 }
 
-/* ── init ── */
+/* ── Inicjalizacja ── */
 buildBgLayers();
 buildSections();
 initObserver();
-showBg(0, 0);
+if (bgLayers.length > 0) showBg(0, 0);
