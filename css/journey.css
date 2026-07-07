@@ -4,16 +4,18 @@
 
 /* ── fixed background ── */
 #frame {
-  position: fixed;
-  inset: 0;
+  position: absolute;      /* NIE fixed — iOS Safari potrafi błędnie
+                               przerysować position:fixed podczas scrolla
+                               (miganie / znikanie treści). Zamiast tego
+                               pozycja jest ustawiana przez JS (journey.js)
+                               jako transform: translateY(scrollY), co
+                               wizualnie daje ten sam efekt "przyklejonego"
+                               tła, ale bez błędu renderowania na iOS. */
+  top: 0; left: 0; right: 0;
+  height: 100vh;
+  height: 100dvh;           /* poprawnie reaguje na chowający się pasek adresu */
   z-index: 0;
   pointer-events: none;
-  /* wymusza własną warstwę kompozytową — naprawia flickering/
-     "wyskakiwanie na wierzch" position:fixed na iOS Safari */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
   will-change: transform;
 }
 #bg-stack { position: absolute; inset: 0; }
