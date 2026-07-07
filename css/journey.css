@@ -1,177 +1,124 @@
+'use strict';
+
 /* ══════════════════════════════════════
-   journey.css
+   journey.js
+   - Każdy album = dwie sekcje w normalnym flow DOM
+   - Tła fixed, crossfade przez IntersectionObserver
+   - Zero sticky, zero morph, zero fade na treści
 ══════════════════════════════════════ */
 
-/* ── fixed background ── */
-#frame {
-  position: absolute;      /* NIE fixed — iOS Safari potrafi błędnie
-                               przerysować position:fixed podczas scrolla
-                               (miganie / znikanie treści). Zamiast tego
-                               pozycja jest ustawiana przez JS (journey.js)
-                               jako transform: translateY(scrollY), co
-                               wizualnie daje ten sam efekt "przyklejonego"
-                               tła, ale bez błędu renderowania na iOS. */
-  top: 0; left: 0; right: 0;
-  height: 100vh;
-  height: 100dvh;           /* poprawnie reaguje na chowający się pasek adresu */
-  z-index: 0;
-  pointer-events: none;
-  will-change: transform;
-}
-#bg-stack { position: absolute; inset: 0; }
+const bgStack = document.getElementById('bg-stack');
+const journey = document.getElementById('journey');
+const frame   = document.getElementById('frame');
 
-.bg-layer {
-  position: absolute; inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 2s ease;
-  filter: brightness(0.65) saturate(0.8);
-}
-.bg-layer.visible { opacity: 1; }
-
-/* dark overlay so text is always readable */
-#text-shield {
-  position: absolute; inset: 0;
-  background: rgba(8,8,8,0.48);
-}
-#bg-veil { display: none; }
-
-/* ── journey container ── */
-#journey {
-  position: relative;
-  z-index: 1;
-}
-
-/* ── TITLE SECTION — full viewport ── */
-.js-title {
-  position: relative;   /* KLUCZOWE: bez tego #frame (position:fixed) potrafi
-                            wyrenderować się NAD tytułem/okładkami — bo elementy
-                            bez position są malowane w CSS w innej "warstwie"
-                            niż elementy pozycjonowane (fixed), niezależnie
-                            od kolejności w DOM. Stąd efekt "znikania" tekstu. */
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 8rem 5vw 4rem;
-}
-
-.jt-meta {
-  display: flex;
-  gap: 1.4rem;
-  align-items: baseline;
-  margin-bottom: 1.2rem;
-}
-.jt-num {
-  font-size: 0.6rem; font-weight: 500;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  color: rgba(240,237,232,0.22);
-}
-.jt-year {
-  font-size: 0.6rem; font-weight: 300;
-  letter-spacing: 0.14em;
-  color: rgba(240,237,232,0.18);
-}
-.jt-title {
-  font-size: clamp(4rem, 11vw, 13rem);
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  line-height: 0.88;
-  color: var(--white);
-  max-width: 80vw;
-}
-
-/* ── CONTENT SECTION — cover + tracks ── */
-.js-content {
-  position: relative;  /* patrz komentarz przy .js-title — ta sama poprawka,
-                           dotyczy okładek albumów i tracklisty */
-  z-index: 1;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  padding: 6rem 5vw;
-  gap: 6vw;
-}
-
-/* cover */
-.jc-cover {
-  aspect-ratio: 1;
-  width: 100%;
-  max-width: min(46vh, 540px);
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.65);
-  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
-}
-.jc-cover:hover { transform: scale(1.012); }
-.jc-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.jc-placeholder { width: 100%; aspect-ratio: 1; background: #141414; }
-
-/* tracks */
-.jc-tracks { display: flex; flex-direction: column; }
-
-.jc-row {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(240,237,232,0.07);
-  cursor: pointer;
-}
-.jc-row:first-child { border-top: 1px solid rgba(240,237,232,0.07); }
-.jc-row:hover .jc-name { color: var(--white); }
-
-.jc-num {
-  font-size: 0.58rem; font-weight: 300;
-  color: rgba(240,237,232,0.22);
-  padding-top: 0.1rem;
-}
-.jc-name {
-  font-size: 0.88rem; font-weight: 400;
-  color: rgba(240,237,232,0.62);
-  transition: color 0.2s ease;
-}
-
-.jc-cta {
-  display: inline-block;
-  margin-top: 2rem;
-  font-size: 0.62rem; font-weight: 500;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: rgba(240,237,232,0.28);
-  transition: color 0.2s ease;
-}
-.jc-cta:hover { color: var(--white); }
-
-/* ── hide old sticky elements ── */
-#cover-wrap, #text-panel, #scroll-hint, #progress-dots,
-#album-tags, #album-cta, #morph-quote {
-  display: none !important;
-}
-
-/* ── MOBILE ── */
-@media (max-width: 768px) {
-  .js-title {
-    min-height: 80vh;
-    padding: 5rem 1.4rem 3rem;
-    justify-content: flex-end;
+/* ── "fake fixed": #frame jest position:absolute, a jego pozycję na
+   ekranie utrzymujemy przez transform, zsynchronizowany ze scrollem.
+   To celowo omija natywny position:fixed, który na iOS Safari podczas
+   przewijania (zwłaszcza przy chowaniu/pokazywaniu paska adresu) potrafi
+   się źle przerysować i na moment wyskoczyć nad/pod treść. ── */
+(function pinFrame() {
+  if (!frame) return;
+  let ticking = false;
+  function update() {
+    frame.style.transform = `translateY(${window.scrollY}px)`;
+    ticking = false;
   }
-  .jt-title {
-    font-size: clamp(3rem, 13vw, 6rem);
-    max-width: 100%;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
   }
-  .js-content {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding: 2rem 1.4rem 5rem;
-    gap: 2.5rem;
-  }
-  .jc-cover {
-    max-width: min(82vw, 380px);
-    margin: 0 auto;
-  }
-  .jc-row { padding: 0.85rem 0; }
-  .jc-name { font-size: 0.92rem; }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('orientationchange', update);
+  update();
+})();
+
+/* ── tła ── */
+let bgLayers = [];
+
+function buildBgLayers() {
+  ALBUMS.forEach((album, ai) => {
+    album.bgs.forEach((src, bi) => {
+      const div = document.createElement('div');
+      div.className = 'bg-layer';
+      div.style.backgroundImage = `url('${src}')`;
+      div.dataset.ai = ai;
+      div.dataset.bi = bi;
+      bgStack.appendChild(div);
+      bgLayers.push(div);
+    });
+  });
 }
+
+function showBg(ai, bi) {
+  bgLayers.forEach(l => {
+    l.classList.toggle('visible',
+      parseInt(l.dataset.ai) === ai &&
+      parseInt(l.dataset.bi) === bi
+    );
+  });
+}
+
+/* ── sekcje albumów ── */
+function buildSections() {
+  ALBUMS.forEach((album, ai) => {
+
+    /* SEKCJA 1: tytuł — pełen ekran */
+    const titleSec = document.createElement('div');
+    titleSec.className = 'js-title';
+    titleSec.dataset.ai = ai;
+    titleSec.dataset.bi = 0;
+    titleSec.innerHTML = `
+      <div class="jt-meta">
+        <span class="jt-num">${String(ai+1).padStart(2,'0')} / ${String(ALBUMS.length).padStart(2,'0')}</span>
+        <span class="jt-year">${album.year}</span>
+      </div>
+      <h2 class="jt-title">${album.title}</h2>`;
+    journey.appendChild(titleSec);
+
+    /* SEKCJA 2: cover + tracks */
+    const contentSec = document.createElement('div');
+    contentSec.className = 'js-content';
+    contentSec.dataset.ai = ai;
+    contentSec.dataset.bi = 1;
+    contentSec.innerHTML = `
+      <div class="jc-cover" onclick="location.href='pages/album.html?id=${album.id}'">
+        ${album.cover
+          ? `<img src="${album.cover}" alt="${album.title}" onerror="this.style.display='none'">`
+          : `<div class="jc-placeholder"></div>`}
+      </div>
+      <div class="jc-tracks">
+        ${album.tracks.map((tr, i) => `
+          <div class="jc-row" onclick="location.href='pages/album.html?id=${album.id}'">
+            <span class="jc-num">${String(i+1).padStart(2,'0')}</span>
+            <span class="jc-name">${tr.title}</span>
+          </div>`).join('')}
+        <a class="jc-cta" href="pages/album.html?id=${album.id}">Zobacz album →</a>
+      </div>`;
+    journey.appendChild(contentSec);
+  });
+}
+
+/* ── IntersectionObserver: zmiana tła gdy sekcja wchodzi w widok ── */
+function initObserver() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const ai = parseInt(e.target.dataset.ai);
+      const bi = parseInt(e.target.dataset.bi);
+      const album = ALBUMS[ai];
+      const bgIdx = (bi === 0 || album.bgs.length < 2) ? 0 : 1;
+      showBg(ai, bgIdx);
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('.js-title, .js-content').forEach(s => obs.observe(s));
+}
+
+/* ── init ── */
+buildBgLayers();
+buildSections();
+initObserver();
+showBg(0, 0);
