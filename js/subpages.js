@@ -1,42 +1,54 @@
 'use strict';
 
-/* ── overlay ── */
+/* ── Deklaracje elementów DOM na samym początku pliku ── */
 const overlay        = document.getElementById('overlay');
 const overlayContent = document.getElementById('overlay-content');
 const overlayClose   = document.getElementById('overlay-close');
+const lightbox       = document.getElementById('lightbox');
+const lbCounter      = document.getElementById('lightbox-counter');
 
+let lbIdx = 0;
+let lbGallery = (typeof GALLERY !== 'undefined') ? GALLERY : [];
+let _currentGallery = (typeof GALLERY !== 'undefined') ? GALLERY : [];
+
+/* ── Zarządzanie Overlayem podstron ── */
 function openOverlay(page, extra) {
+  if (!overlay || !overlayContent) return;
   overlay.classList.add('visible');
   document.body.style.overflow = 'hidden';
   overlayContent.innerHTML = buildPage(page, extra);
   overlayContent.scrollTop = 0;
-  if (page === 'gallery') initGalleryRows(GALLERY);
-  if (page === 'ebru')    initGalleryRows(GALLERY_EBRU);
-  if (page === 'marmurkowanie') initGalleryRows(GALLERY_EBRU);
+  
+  if (page === 'gallery' && typeof GALLERY !== 'undefined') initGalleryRows(GALLERY);
+  if (page === 'ebru' && typeof GALLERY_EBRU !== 'undefined') initGalleryRows(GALLERY_EBRU);
+  if (page === 'marmurkowanie' && typeof GALLERY_EBRU !== 'undefined') initGalleryRows(GALLERY_EBRU);
 }
 
 function closeOverlay() {
+  if (!overlay) return;
   overlay.classList.remove('visible');
   document.body.style.overflow = '';
-  /* scroll back to very top so intro/nicknames are visible */
   window.scrollTo({ top: 0, behavior: 'instant' });
-  /* restore portfolio label */
 }
 
-overlayClose.addEventListener('click', closeOverlay);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+if (overlayClose) overlayClose.addEventListener('click', closeOverlay);
+if (overlay) {
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+}
+
+/* ── Obsługa klawiszy (Esc, Strzałki) ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (lightbox.classList.contains('visible')) closeLightbox();
+    if (lightbox && lightbox.classList.contains('visible')) closeLightbox();
     else closeOverlay();
   }
-  if (lightbox.classList.contains('visible')) {
+  if (lightbox && lightbox.classList.contains('visible')) {
     if (e.key === 'ArrowRight') lbNext();
     if (e.key === 'ArrowLeft')  lbPrev();
   }
 });
 
-/* ── router ── */
+/* ── Router i budowanie struktur HTML podstron ── */
 function buildPage(page, extra) {
   switch (page) {
     case 'projects': return buildProjects();
@@ -49,8 +61,8 @@ function buildPage(page, extra) {
   }
 }
 
-/* ── PROJECTS LIST ── */
 function buildProjects() {
+  if (typeof PROJECTS === 'undefined') return '';
   return `
     <span class="sp-eyebrow">projekty artystyczne</span>
     <h1 class="sp-title">Projekty</h1>
@@ -65,8 +77,8 @@ function buildProjects() {
     </div>`;
 }
 
-/* ── SINGLE PROJECT ── */
 function buildProject(id) {
+  if (typeof PROJECTS === 'undefined') return '';
   const p = PROJECTS.find(x => x.id === id);
   if (!p) return '<p style="color:rgba(240,237,232,.3)">Nie znaleziono projektu.</p>';
 
@@ -94,28 +106,8 @@ function buildProject(id) {
     ${tracksBlock}`;
 }
 
-/* ── ALBUMS (was products) ── */
-function buildAlbums() {
-  return `
-    <span class="sp-eyebrow">dyskografia</span>
-    <h1 class="sp-title">Albumy</h1>
-    <div class="pr-grid">
-      ${ALBUMS.map(a => `
-        <div class="pr-card" onclick="window.location.href='pages/album.html?id=${a.id}'">
-          <div class="pr-cover">
-            ${a.cover
-              ? `<img src="${a.cover}" alt="${a.title}" onerror="this.style.display='none'">`
-              : `<div class="pr-cover-placeholder">${placeholderMini(a)}</div>`}
-          </div>
-          <div class="pr-title">${a.title}</div>
-          <div class="pr-fmt">${a.year}</div>
-          <div class="pr-price">${a.buy.digital} ${a.buy.currency}</div>
-        </div>`).join('')}
-    </div>`;
-}
-
-/* ── ABOUT ── */
 function buildAbout() {
+  if (typeof ABOUT === 'undefined') return '';
   const portrait = ABOUT.portrait
     ? `<img src="${ABOUT.portrait}" alt="" style="width:100%;height:100%;object-fit:cover;"
          onerror="this.parentElement.innerHTML='<div class=\\'ab-photo-placeholder\\'>—</div>'">`
@@ -138,8 +130,8 @@ function buildAbout() {
     </div>`;
 }
 
-/* ── GALLERY PAGE — paski serii ── */
 function buildGalleryPage(title, eyebrow) {
+  if (typeof GALLERY === 'undefined' || typeof GALLERY_EBRU === 'undefined') return '';
   const series = title === 'Marmurkowanie' ? GALLERY_EBRU : GALLERY;
   return `
     <span class="sp-eyebrow">${eyebrow}</span>
@@ -148,15 +140,14 @@ function buildGalleryPage(title, eyebrow) {
       ${series.map((s, i) => `
         <div class="gl-row-item" data-series="${i}">
           <img class="gl-row-img" src="${s.cover}" alt="${s.title}"
-            onerror="this.outerHTML='<div class=\'gl-row-placeholder\'>${s.title}</div>'">
+            onerror="this.outerHTML='<div class=\\'gl-row-placeholder\\'>${s.title}</div>'">
           <div class="gl-row-label">${s.title} <span class="gl-row-count">${s.images.length}</span></div>
         </div>`).join('')}
     </div>`;
 }
 
-
-/* ── CONTACT ── */
 function buildContact() {
+  if (typeof CONTACT === 'undefined') return '';
   return `
     <span class="sp-eyebrow">kontakt</span>
     <h1 class="sp-title">Kontakt</h1>
@@ -171,41 +162,7 @@ function buildContact() {
     </div>`;
 }
 
-/* ── gallery strip: drag scroll + click lightbox ── */
-let _currentGallery = GALLERY;
-
-function initStrip(wrapId, galleryArr) {
-  _currentGallery = galleryArr;
-  const wrap = document.getElementById(wrapId);
-  if (!wrap) return;
-
-  let isDown = false, startX, scrollLeft, moved = false;
-
-  wrap.addEventListener('mousedown', e => {
-    isDown = true; moved = false;
-    wrap.classList.add('dragging');
-    startX     = e.pageX - wrap.offsetLeft;
-    scrollLeft = wrap.scrollLeft;
-  });
-  wrap.addEventListener('mouseleave', () => { isDown = false; wrap.classList.remove('dragging'); });
-  wrap.addEventListener('mouseup',    () => { isDown = false; wrap.classList.remove('dragging'); });
-  wrap.addEventListener('mousemove',  e => {
-    if (!isDown) return;
-    e.preventDefault();
-    moved = true;
-    const x = e.pageX - wrap.offsetLeft;
-    wrap.scrollLeft = scrollLeft - (x - startX) * 1.3;
-  });
-
-  wrap.addEventListener('click', e => {
-    if (moved) return;
-    const item = e.target.closest('.gl-item');
-    if (!item) return;
-    openLightbox(parseInt(item.dataset.idx), galleryArr);
-  });
-}
-
-/* ── gallery rows: click pasek → otwórz serię w lightboxie ── */
+/* ── Obsługa galerii wierszowej (Grid) ── */
 function initGalleryRows(galleryArr) {
   const rows = document.getElementById('gl-rows');
   if (!rows) return;
@@ -214,85 +171,71 @@ function initGalleryRows(galleryArr) {
     if (!item) return;
     const seriesIdx = parseInt(item.dataset.series);
     const series = galleryArr[seriesIdx];
-    // convert series images to lightbox format
     const lbImages = series.images.map(src => ({ src }));
     openLightbox(0, lbImages);
   });
 }
 
-/* ── lightbox ── */
-const lightbox  = document.getElementById('lightbox');
-const lbCounter = document.getElementById('lightbox-counter');
-let lbIdx = 0;
-let lbGallery = GALLERY;
-
+/* ── Lightbox (Pełnoekranowy podgląd zdjęć) ── */
 function openLightbox(idx, gallery) {
-  lbGallery = gallery || GALLERY;
+  if (!lightbox) return;
+  lbGallery = gallery || ((typeof GALLERY !== 'undefined') ? GALLERY : []);
   lbIdx = idx;
   buildLbStrip();
   lightbox.classList.add('visible');
-  /* wait for DOM then scroll to correct slide */
   requestAnimationFrame(() => showLbImage(null));
 }
-function closeLightbox() {
-  lightbox.classList.remove('visible');
-}
-function lbNext() { lbIdx = (lbIdx + 1) % lbGallery.length; showLbImage('next'); }
-function lbPrev() { lbIdx = (lbIdx - 1 + lbGallery.length) % lbGallery.length; showLbImage('prev'); }
 
-/* update counter on native scroll */
-(function() {
-  let scrollTimer;
-  document.addEventListener('DOMContentLoaded', () => {
-    const strip = document.getElementById('lb-strip');
-    if (!strip) return;
-    strip.addEventListener('scroll', () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const idx = Math.round(strip.scrollLeft / strip.clientWidth);
-        if (idx !== lbIdx && idx >= 0 && idx < lbGallery.length) {
-          lbIdx = idx;
-          lbCounter.textContent = `${lbIdx + 1} / ${lbGallery.length}`;
-        }
-      }, 80);
-    }, { passive: true });
-  });
-})();
+function closeLightbox() {
+  if (lightbox) lightbox.classList.remove('visible');
+}
+
+function lbNext() { if (lbGallery.length) { lbIdx = (lbIdx + 1) % lbGallery.length; showLbImage('next'); } }
+function lbPrev() { if (lbGallery.length) { lbIdx = (lbIdx - 1 + lbGallery.length) % lbGallery.length; showLbImage('prev'); } }
 
 function buildLbStrip() {
-  /* build a horizontal strip of all images — native scroll-snap */
   const strip = document.getElementById('lb-strip');
-  strip.innerHTML = lbGallery.map((g, i) =>
+  if (!strip) return;
+  strip.innerHTML = lbGallery.map(g =>
     `<div class="lb-slide"><img src="${g.src || ''}" alt="" loading="lazy"></div>`
   ).join('');
 }
 
 function showLbImage(dir) {
   const strip = document.getElementById('lb-strip');
+  if (!strip) return;
   const slide = strip.children[lbIdx];
   if (slide) {
     slide.scrollIntoView({ behavior: dir ? 'smooth' : 'instant', block: 'nearest', inline: 'center' });
   }
-  lbCounter.textContent = `${lbIdx + 1} / ${lbGallery.length}`;
+  if (lbCounter) lbCounter.textContent = `${lbIdx + 1} / ${lbGallery.length}`;
 }
 
-document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-document.getElementById('lb-prev').addEventListener('click', lbPrev);
-document.getElementById('lb-next').addEventListener('click', lbNext);
-lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+/* Podpięcie zdarzeń Lightboxa po upewnieniu się, że DOM istnieje */
+document.addEventListener('DOMContentLoaded', () => {
+  const lbClose = document.getElementById('lightbox-close');
+  const lbP = document.getElementById('lb-prev');
+  const lbN = document.getElementById('lb-next');
+  const strip = document.getElementById('lb-strip');
 
-/* native scroll-snap handles touch swipe */
+  if (lbClose) lbClose.addEventListener('click', closeLightbox);
+  if (lbP) lbP.addEventListener('click', lbPrev);
+  if (lbN) lbN.addEventListener('click', lbNext);
+  if (lightbox) {
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  }
 
-/* ── mini placeholder ── */
-function placeholderMini(album) {
-  const c = album.color || '#555';
-  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-    <rect width="200" height="200" fill="#0e0e0e"/>
-    ${[65,46,30,16].map((r,i) =>
-      `<circle cx="100" cy="100" r="${r}" fill="none"
-         stroke="${c}" stroke-width="0.6"
-         opacity="${(.07+i*.065).toFixed(2)}"/>`
-    ).join('')}
-  </svg>`;
-}
-
+  if (strip) {
+    let scrollTimer;
+    strip.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const idx = Math.round(strip.scrollLeft / strip.clientWidth);
+        if (idx !== lbIdx && idx >= 0 && idx < lbGallery.length) {
+          lbIdx = idx;
+          if (lbCounter) lbCounter.textContent = `${lbIdx + 1} / ${lbGallery.length}`;
+        }
+      }, 80);
+    }, { passive: true });
+  }
+});
