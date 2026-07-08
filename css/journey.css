@@ -8,18 +8,20 @@
   z-index: 3;             /* Ponad tłem #frame, aby teksty były klikalne */
   background: transparent;
 }
-
-/* Ekran trzymający zdjęcia tła */
+/* Ekran trzymający zdjęcia tła - teraz całkowicie płynny i stabilny */
 #frame {
-  position: absolute;
+  position: fixed;        /* Zmieniono z absolute na fixed - tło stoi jak zamurowane */
   top: 0; left: 0;
   width: 100%;
   height: 100vh;
   z-index: 1;
   overflow: hidden;
-  pointer-events: none;   /* Zdjęcia nie mogą blokować kliknięć */
+  pointer-events: none;   
+  
+  /* Triki wymuszające renderowanie tła bezpośrednio przez procesor graficzny (GPU) */
+  transform: translate3d(0, 0, 0); 
+  will-change: transform;
 }
-
 #bg-stack {
   position: absolute;
   inset: 0;
