@@ -1,184 +1,67 @@
-'use strict';
+/* ══════════════════════════════════════
+   journey.css - Style osi czasu i teł
+   ══════════════════════════════════════ */
 
-/* ── ARCHITEKTURA STRONY GŁÓWNEJ (JOURNEY) ── */
+/* Główny kontener przewijanej treści */
+#journey {
+  position: relative;
+  z-index: 3;             /* Musi być nad tłem #frame, aby teksty i linki były klikalne */
+  background: transparent; /* Przezroczyste tło, żeby widzieć zdjęcia pod spodem */
+}
+
+/* Sekcje albumów (tytuły oraz listy utworów) */
+.js-title, .js-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 4;
+  padding: 6rem 2rem;
+}
+
+/* Ekran "fake-fixed" trzymający tła (sterowany przez requestAnimationFrame w JS) */
 #frame {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100vh;
-  z-index: 1;
-  pointer-events: none;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;             /* Pod treścią #journey, ale pod intro (z-index:2) */
   overflow: hidden;
+  pointer-events: none;   /* Zdjęcia nie mogą blokować myszki */
 }
 
+/* Stos, w którym lądują wygenerowane warstwy */
 #bg-stack {
   position: absolute;
-  inset: 0; width: 100%; height: 100%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--black);
 }
 
+/* Pojedyncza warstwa zdjęcia tła */
 .bg-layer {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  visibility: hidden;
+  
+  /* Płynne przenikanie (crossfade), o którym pisałeś */
+  transition: opacity 0.9s cubic-bezier(0.23, 1, 0.32, 1), 
+              visibility 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+              
+  /* Przyciemnienie zdjęć (identyczne jak na podstronie albumu), 
+     dzięki czemu białe teksty utworów będą idealnie czytelne */
+  filter: brightness(0.38) saturate(0.85); 
 }
 
+/* Klasa nadawana przez IntersectionObserver w journey.js */
 .bg-layer.visible {
-  opacity: 0.22; /* Delikatne tło albumu w tle */
-}
-
-#text-shield {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(8,8,8,0.5) 0%, rgba(8,8,8,0.2) 50%, rgba(8,8,8,0.5) 100%);
-}
-
-#bg-veil {
-  position: absolute;
-  inset: 0;
-  background: rgba(8, 8, 8, 0.15);
-}
-
-#journey {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-}
-
-/* Sekcje z dużymi Tytułami Albumów */
-.js-title {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 10vw;
-}
-
-.jt-meta {
-  display: flex;
-  gap: 2rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(240, 237, 232, 0.3);
-  margin-bottom: 1.5rem;
-}
-
-.jt-title {
-  font-size: clamp(2.8rem, 7vw, 6.5rem);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: var(--white);
-}
-
-/* Sekcje z Okładkami i Tracklistami */
-.js-content {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 42% 58%;
-  gap: 6vw;
-  align-items: center;
-  padding: 10vh 10vw;
-}
-
-/* Blok okładki - zapobiega rozciąganiu na cały ekran */
-.jc-cover {
-  width: 100%;
-  max-width: 440px;
-  aspect-ratio: 1;
-  cursor: pointer;
-  overflow: hidden;
-  box-shadow: 0 40px 90px rgba(0,0,0,0.7);
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  background: #111;
-}
-
-.jc-cover:hover {
-  transform: scale(0.98);
-}
-
-.jc-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.jc-placeholder {
-  width: 100%; height: 100%;
-  background: #121212;
-}
-
-/* Tracklista */
-.jc-tracks {
-  display: flex;
-  flex-direction: column;
-  max-width: 580px;
-  width: 100%;
-}
-
-.jc-row {
-  display: grid;
-  grid-template-columns: 2.5rem 1fr;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(240, 237, 232, 0.05);
-  cursor: pointer;
-  transition: padding-left 0.3s ease, color 0.3s ease;
-}
-
-.jc-row:hover {
-  padding-left: 0.5rem;
-  color: var(--white);
-}
-
-.jc-num {
-  font-size: 0.65rem;
-  color: rgba(240, 237, 232, 0.25);
-  font-weight: 300;
-}
-
-.jc-name {
-  font-size: 0.92rem;
-  color: rgba(240, 237, 232, 0.65);
-}
-
-.jc-row:hover .jc-name {
-  color: var(--white);
-}
-
-.jc-cta {
-  align-self: flex-start;
-  margin-top: 2rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(240, 237, 232, 0.35);
-  transition: color 0.3s ease;
-}
-
-.jc-cta:hover {
-  color: var(--white);
-}
-
-/* RESPONSYWNOŚĆ (MOBILES & TABLETS) */
-@media (max-width: 900px) {
-  .js-title {
-    padding: 0 6vw;
-  }
-  .js-content {
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    padding: 10vh 6vw;
-    height: auto;
-    min-height: auto;
-  }
-  .jc-cover {
-    max-width: 300px;
-    margin: 0 auto;
-  }
-  .jc-tracks {
-    max-width: 100%;
-  }
+  opacity: 1;
+  visibility: visible;
 }
