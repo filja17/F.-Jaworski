@@ -1,66 +1,46 @@
 'use strict';
 
+/* ══════════════════════════════════════
+   journey.js
+   - Każdy album = dokładnie 1 warstwa tła
+   - Płynna zmiana tła dokładnie w połowie ekranu
+   - Brak drżenia dzięki natywnej synchronizacji warstw
+══════════════════════════════════════ */
+
 const bgStack = document.getElementById('bg-stack');
 const journey = document.getElementById('journey');
-const frame   = document.getElementById('frame');
 
-/* ── Pozycjonowanie tła chroniące przed błędami Safari na iOS ── */
-(function pinFrame() {
-  if (!frame) return;
-  let ticking = false;
-  function update() {
-    frame.style.transform = `translateY(${window.scrollY}px)`;
-    ticking = false;
-  }
-  function onScroll() {
-    if (!ticking) {
-      requestAnimationFrame(update);
-      ticking = true;
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', update);
-  window.addEventListener('orientationchange', update);
-  update();
-})();
-
-/* ── Generowanie warstw tła ── */
 let bgLayers = [];
 
+/* ── Budowanie warstw tła (zawsze 1 pierwsze zdjęcie z albumu) ── */
 function buildBgLayers() {
-  if (!bgStack || typeof ALBUMS === 'undefined') return;
   ALBUMS.forEach((album, ai) => {
-    album.bgs.forEach((src, bi) => {
-      const div = document.createElement('div');
-      div.className = 'bg-layer';
-      div.style.backgroundImage = `url('${src}')`;
-      div.dataset.ai = ai;
-      div.dataset.bi = bi;
-      bgStack.appendChild(div);
-      bgLayers.push(div);
-    });
+    // Pobieramy tylko pierwsze zdjęcie z tablicy bgs
+    const src = Array.isArray(album.bgs) ? album.bgs[0] : album.bgs;
+    const div = document.createElement('div');
+    div.className = 'bg-layer';
+    div.style.backgroundImage = `url('${src}')`;
+    div.dataset.ai = ai;
+    bgStack.appendChild(div);
+    bgLayers.push(div);
   });
 }
 
-function showBg(ai, bi) {
+/* ── Przełączanie widoczności tła (aktywuje tylko jedno wybrane) ── */
+function showBg(ai) {
   bgLayers.forEach(l => {
-    l.classList.toggle('visible',
-      parseInt(l.dataset.ai) === ai &&
-      parseInt(l.dataset.bi) === bi
-    );
+    l.classList.toggle('visible', parseInt(l.dataset.ai) === ai);
   });
 }
 
-/* ── Budowanie sekcji produktowych ── */
+/* ── Budowanie sekcji treści albumów ── */
 function buildSections() {
-  if (!journey || typeof ALBUMS === 'undefined') return;
-  
   ALBUMS.forEach((album, ai) => {
-    /* SEKCJA 1: Tytuł albumu */
+
+    /* SEKCJA 1: Tytuł albumu (100vh) */
     const titleSec = document.createElement('div');
     titleSec.className = 'js-title';
     titleSec.dataset.ai = ai;
-    titleSec.dataset.bi = 0;
     titleSec.innerHTML = `
       <div class="jt-meta">
         <span class="jt-num">${String(ai+1).padStart(2,'0')} / ${String(ALBUMS.length).padStart(2,'0')}</span>
@@ -69,11 +49,10 @@ function buildSections() {
       <h2 class="jt-title">${album.title}</h2>`;
     journey.appendChild(titleSec);
 
-    /* SEKCJA 2: Okładka i spis utworów */
+    /* SEKCJA 2: Okładka + utwory (100vh) */
     const contentSec = document.createElement('div');
     contentSec.className = 'js-content';
     contentSec.dataset.ai = ai;
-    contentSec.dataset.bi = 1;
     contentSec.innerHTML = `
       <div class="jc-cover" onclick="location.href='pages/album.html?id=${album.id}'">
         ${album.cover
@@ -92,26 +71,26 @@ function buildSections() {
   });
 }
 
-/* ── Skrzyżowanie widoczności (IntersectionObserver) dla płynnych przejść tła ── */
+/* ── Precyzyjny IntersectionObserver (wycelowany w środek ekranu) ── */
 function initObserver() {
-  if (typeof ALBUMS === 'undefined') return;
-  
+  // rootMargin "-50% 0px" sprawia, że strefa detekcji staje się wąską linią na samym środku ekranu.
+  // Kiedy sekcja najeżdża na tę linię, natychmiast odpala się zmiana zdjęcia.
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const ai = parseInt(e.target.dataset.ai);
-      const bi = parseInt(e.target.dataset.bi);
-      const album = ALBUMS[ai];
-      const bgIdx = (bi === 0 || album.bgs.length < 2) ? 0 : 1;
-      showBg(ai, bgIdx);
+      if (e.isIntersecting) {
+        const ai = parseInt(e.target.dataset.ai);
+        showBg(ai);
+      }
     });
-  }, { threshold: 0.35 });
+  }, { rootMargin: "-50% 0px -50% 0px" });
 
+  // Obserwujemy zarowno tytuł jak i sekcję z utworami, dzięki temu pierwsze zdjęcie 
+  // zaczyna się od razu po napisie "Albumy" i trwa stabilnie aż do połowy następnego albumu.
   document.querySelectorAll('.js-title, .js-content').forEach(s => obs.observe(s));
 }
 
-/* ── Inicjalizacja ── */
+/* ── Init ── */
 buildBgLayers();
 buildSections();
 initObserver();
-if (bgLayers.length > 0) showBg(0, 0);
+showBg(0); // Pierwsze zdjęcie aktywne na starcie
