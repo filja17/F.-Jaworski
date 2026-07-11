@@ -234,26 +234,26 @@ const PROJECTS = [
   {
     id:'arbitraz-sztuki',
     name:'Arbitraż Sztuki',
-    year:'2023–obecnie',
+    year:'2025–obecnie',
     tag:'warsztaty artystyczne',
-    desc:'Cykl warsztatów artystycznych poświęconych pograniczu wartości rynkowej i artystycznej w sztuce współczesnej. Spotkania, dyskusje, praktyczne ćwiczenia z uczestnikami.',
+    desc:'Cykl warsztatów artystycznych poświęconych wielom techniką artystycznym, jak i warsztatowo, tak i od strony teoretycznej. Współtworzone z dwoma wspaniałymi artystkami - Dominika Rozkrut i Helena Pryżanowską',
     link:'https://arbitrazsztuki.pl',
     tracks:[],
   },
   {
     id:'lekkosc',
     name:'Lekkość',
-    year:'2022–obecnie',
-    tag:'chusty marmurkowane',
-    desc:'Projekt chust artystycznych marmurkowanych metodą ebru. Każda chusta jest unikalnym, niepowtarzalnym wzorem — ręcznie tworzonym na powierzchni wody.',
+    year:'2026',
+    tag:'chusty',
+    desc:'Projekt chust artystycznych z wykorzystaniem szerokiego spektrum technik, głównie skupiających się dookoła pigmentó naturalnych, barwników naturalnych i metody marmurkowej',
     tracks:[],
   },
   {
     id:'among-other-sounds',
     name:'Among Other Sounds',
-    year:'2021–2023',
-    tag:'field recording',
-    desc:'Seria nagrań terenowych z Polski, Islandii i Gruzji. Dokumentacja akustyczna miejsc zanikających — zakłady przemysłowe, opuszczone wsie, tereny pohutnicze.',
+    year:'2025–obecnie',
+    tag:'minimal/loop recording',
+    desc:'Projekt muzyczny, z wykorzystaniem klarnetu, pianina, syntezatorów i wielu innych. Założeniem projektu jest odsuzkiwanie atmosfery i ekspresji, poprzez wykorzystanie jaknjabrdziej okrojonych form kompozycyjnych. Innymi słowy ukazanie jaknajszerszego spektrum emocji, barwy, lekkości, uzywając jaknajmniejszej ilości środków muzycznych.',
     tracks:[
       {title:'Huta Cynku, Miasteczko Śląskie'},
       {title:'Wioska Gori, Gruzja'},
@@ -264,9 +264,9 @@ const PROJECTS = [
   {
     id:'nota-contra-notam',
     name:'Nota Contra Notam',
-    year:'2020–2022',
-    tag:'muzyka współczesna',
-    desc:'Cykl kompozycji na instrumenty akustyczne i elektronikę. Opozycja między notacją a improwizacją, między tym, co zapisane, a tym, co przypadkowe.',
+    year:'2020–2026',
+    tag:'muzyka elektroniczna',
+    desc:'Projekt, w którym inspiracjami były klasyczne utowry drummbasowe, ',
     tracks:[
       {title:'NCN I'},
       {title:'NCN II'},
@@ -279,40 +279,25 @@ const PROJECTS = [
     name:'Kamaw Tut',
     year:'2019–2021',
     tag:'kolaboracja',
-    desc:'Kolaboracja z muzykiem z Etiopii. Spotkanie tradycji muzycznych — azmari z elektroniką. Nagrywane na odległość, montowane razem w Warszawie.',
-    tracks:[
-      {title:'Addis'},
-      {title:'Warszawa'},
-      {title:'Droga'},
-    ],
-  },
+    desc:'Współpraca artystyczna dookoła form alternatywnego rocka, funku, krautrocka, z takimi twórcami jak Bernar Mileau, Jędrek Woźniak czy Michał Kilijanek',
+     },
   {
     id:'drumless-blonde-heads',
     name:'Drumless Blonde Heads',
     year:'2018–2019',
     tag:'band',
-    desc:'Kwartet gitarowy bez perkusji. Eksploracja ciszy w muzyce grupowej — rytm budowany przez teksturę i przestrzeń, nie uderzenia.',
-    tracks:[
-      {title:'Bez tytułu 1'},
-      {title:'Bez tytułu 2'},
-      {title:'Bez tytułu 3'},
-      {title:'Bez tytułu 4'},
-    ],
-  },
+    desc:'Pierwszy projekt muzyczny, będący połączeniem licznych ścierzek gitarowych, licznych pogłosów, przesterów i ciszy w głośności. Inspirowany krautrockiem i kompozycjami Jozefa Van Wissema',
+     },
 ];
 
 /* ─── O MNIE ─── */
 const ABOUT = {
   portrait: 'assets/about/portrait.jpg',
   paragraphs: [
-    'Muzyk, kompozytor i fotograf. Zajmuję się dźwiękiem jako medium — nie tylko słyszalnym, ale i odczuwanym jako przestrzeń, temperatura, ciężar.',
-    'Nagrywam ambient, muzykę eksperymentalną i akustyczną. Interesuję się granicą między ciszą a hałasem, między przypadkiem a intencją.',
-    'Fotografia to dla mnie przedłużenie tego samego myślenia — kadr jako chwila wyizolowana z ciągłości.',
-  ],
-  stats:[
-    {n:'8',   l:'albumów'},
-    {n:'7',   l:'projektów'},
-    {n:'2018',l:'od roku'},
+    'Założeniem jest wyrazić siebie, nieważne do jkaiego medium podchodzę, liczy się tylko wolnośc jakie w nim się dobija',
+    'Nagrywam ambient, muzykę eksperymentalną i akustyczną, jednak określanie gatunku jest porblematyczne, ponieważ to wszstko jest na temat barwy, równowagi i adekwatności',
+    'Spełniam się również w sztukach plastycznych, yuzywając pigmentów naturlanych czy malarstwem na wodzie tzw. Ebru',
+    'Tworzenie jest życiem, życie bez towrzenia jest popadaneim w nieadekwatność i ciężkość',
   ],
 };
 
