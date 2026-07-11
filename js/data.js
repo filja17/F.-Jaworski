@@ -61,7 +61,7 @@ const ALBUMS = [
       {title:'We got no more'},
     ],
     buy:{digital:45,currency:'PLN'},
-    buyUrl:'https://ko-fi.com/s/TWOJ_LINK', /* Ko-fi: załóż produkt na ko-fi.com, wklej link tutaj */
+    buyUrl:'https://ko-fi.com/s/TWOJ_LINK',
     streaming:[
       {name:'Bandcamp',   icon:'◈', action:'Kup / Słuchaj', url:'#'},
       {name:'Spotify',    icon:'◉', action:'Słuchaj',       url:'https://open.spotify.com/album/3Qypn6mvBOe8xxebsoislP'},
@@ -146,7 +146,7 @@ const ALBUMS = [
       {title:'Smog'},
       {title:'Fleo'},
       {title:'A Submissive Smile'},
-     {title:'One Day with Ayn Rand'},
+      {title:'One Day with Ayn Rand'},
     ],
     buy:{digital:39,currency:'PLN'},
     streaming:[
@@ -216,10 +216,7 @@ const ALBUMS = [
   },
 ];
 
-/* ═══════════════════════════════════
-   PROJEKTY ARTYSTYCZNE
-   Każdy prowadzi do pages/project.html?id=...
-═══════════════════════════════════ */
+/* ─── PROJEKTY ARTYSTYCZNE ─── */
 const PROJECTS = [
   {
     id:'szelest',
@@ -304,9 +301,7 @@ const PROJECTS = [
   },
 ];
 
-/* ═══════════════════════════════════
-   O MNIE
-═══════════════════════════════════ */
+/* ─── O MNIE ─── */
 const ABOUT = {
   portrait: 'assets/about/portrait.jpg',
   paragraphs: [
@@ -316,209 +311,148 @@ const ABOUT = {
   ],
   stats:[
     {n:'8',   l:'albumów'},
-    {n:'5',   l:'projektów'},
+    {n:'7',   l:'projektów'},
     {n:'2018',l:'od roku'},
   ],
 };
 
 /* ═══════════════════════════════════
-   GALERIA FOTOGRAFII
+   GALERIA FOTOGRAFII (Zaktualizowana do 9 serii)
 ═══════════════════════════════════ */
-/* GALERIA FOTOGRAFII — 8 serii, każda 15 zdjęć
-   Podmień title na własne nazwy.
-   cover = zdjęcie widoczne jako pasek.
-*/
 const GALLERY = [
   {
     cover: 'assets/gallery/photo/seria-1/01.jpg',
     title: 'Seria 1',
     images: [
-      'assets/gallery/photo/seria-1/01.jpg',
-      'assets/gallery/photo/seria-1/02.jpg',
-      'assets/gallery/photo/seria-1/03.jpg',
-      'assets/gallery/photo/seria-1/04.jpg',
-      'assets/gallery/photo/seria-1/05.jpg',
-      'assets/gallery/photo/seria-1/06.jpg',
-      'assets/gallery/photo/seria-1/07.jpg',
-      'assets/gallery/photo/seria-1/08.jpg',
-      'assets/gallery/photo/seria-1/09.jpg',
-      'assets/gallery/photo/seria-1/10.jpg',
-      'assets/gallery/photo/seria-1/11.jpg',
-      'assets/gallery/photo/seria-1/12.jpg',
-      'assets/gallery/photo/seria-1/13.jpg',
-      'assets/gallery/photo/seria-1/14.jpg',
-      'assets/gallery/photo/seria-1/15.jpg',
+      'assets/gallery/photo/seria-1/01.jpg', 'assets/gallery/photo/seria-1/02.jpg',
+      'assets/gallery/photo/seria-1/03.jpg', 'assets/gallery/photo/seria-1/04.jpg',
+      'assets/gallery/photo/seria-1/05.jpg', 'assets/gallery/photo/seria-1/06.jpg',
+      'assets/gallery/photo/seria-1/07.jpg', 'assets/gallery/photo/seria-1/08.jpg',
+      'assets/gallery/photo/seria-1/09.jpg', 'assets/gallery/photo/seria-1/10.jpg',
+      'assets/gallery/photo/seria-1/11.jpg', 'assets/gallery/photo/seria-1/12.jpg',
+      'assets/gallery/photo/seria-1/13.jpg', 'assets/gallery/photo/seria-1/14.jpg',
+      'assets/gallery/photo/seria-1/15.jpg', 'assets/gallery/photo/seria-1/16.jpg',
+      'assets/gallery/photo/seria-1/17.jpg', 'assets/gallery/photo/seria-1/18.jpg',
+      'assets/gallery/photo/seria-1/19.jpg', 'assets/gallery/photo/seria-1/20.jpg',
+      'assets/gallery/photo/seria-1/21.jpg', 'assets/gallery/photo/seria-1/22.jpg',
+      'assets/gallery/photo/seria-1/23.jpg', 'assets/gallery/photo/seria-1/24.jpg',
+      'assets/gallery/photo/seria-1/25.jpg', 'assets/gallery/photo/seria-1/26.jpg',
+      'assets/gallery/photo/seria-1/27.jpg', 'assets/gallery/photo/seria-1/28.jpg',
+      'assets/gallery/photo/seria-1/29.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-2/01.jpg',
     title: 'Seria 2',
     images: [
-      'assets/gallery/photo/seria-2/01.jpg',
-      'assets/gallery/photo/seria-2/02.jpg',
-      'assets/gallery/photo/seria-2/03.jpg',
-      'assets/gallery/photo/seria-2/04.jpg',
-      'assets/gallery/photo/seria-2/05.jpg',
-      'assets/gallery/photo/seria-2/06.jpg',
-      'assets/gallery/photo/seria-2/07.jpg',
-      'assets/gallery/photo/seria-2/08.jpg',
-      'assets/gallery/photo/seria-2/09.jpg',
-      'assets/gallery/photo/seria-2/10.jpg',
-      'assets/gallery/photo/seria-2/11.jpg',
-      'assets/gallery/photo/seria-2/12.jpg',
-      'assets/gallery/photo/seria-2/13.jpg',
-      'assets/gallery/photo/seria-2/14.jpg',
-      'assets/gallery/photo/seria-2/15.jpg',
+      'assets/gallery/photo/seria-2/01.jpg', 'assets/gallery/photo/seria-2/02.jpg',
+      'assets/gallery/photo/seria-2/03.jpg', 'assets/gallery/photo/seria-2/04.jpg',
+      'assets/gallery/photo/seria-2/05.jpg', 'assets/gallery/photo/seria-2/06.jpg',
+      'assets/gallery/photo/seria-2/07.jpg', 'assets/gallery/photo/seria-2/08.jpg',
+      'assets/gallery/photo/seria-2/09.jpg', 'assets/gallery/photo/seria-2/10.jpg',
+      'assets/gallery/photo/seria-2/11.jpg', 'assets/gallery/photo/seria-2/12.jpg',
+      'assets/gallery/photo/seria-2/13.jpg', 'assets/gallery/photo/seria-2/14.jpg',
+      'assets/gallery/photo/seria-2/15.jpg', 'assets/gallery/photo/seria-2/16.jpg',
+      'assets/gallery/photo/seria-2/17.jpg', 'assets/gallery/photo/seria-2/18.jpg',
+      'assets/gallery/photo/seria-2/19.jpg', 'assets/gallery/photo/seria-2/20.jpg',
+      'assets/gallery/photo/seria-2/21.jpg', 'assets/gallery/photo/seria-2/22.jpg',
+      'assets/gallery/photo/seria-2/23.jpg', 'assets/gallery/photo/seria-2/24.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-3/01.jpg',
     title: 'Seria 3',
     images: [
-      'assets/gallery/photo/seria-3/01.jpg',
-      'assets/gallery/photo/seria-3/02.jpg',
-      'assets/gallery/photo/seria-3/03.jpg',
-      'assets/gallery/photo/seria-3/04.jpg',
-      'assets/gallery/photo/seria-3/05.jpg',
-      'assets/gallery/photo/seria-3/06.jpg',
-      'assets/gallery/photo/seria-3/07.jpg',
-      'assets/gallery/photo/seria-3/08.jpg',
-      'assets/gallery/photo/seria-3/09.jpg',
-      'assets/gallery/photo/seria-3/10.jpg',
-      'assets/gallery/photo/seria-3/11.jpg',
-      'assets/gallery/photo/seria-3/12.jpg',
-      'assets/gallery/photo/seria-3/13.jpg',
-      'assets/gallery/photo/seria-3/14.jpg',
-      'assets/gallery/photo/seria-3/15.jpg',
+      'assets/gallery/photo/seria-3/01.jpg', 'assets/gallery/photo/seria-3/02.jpg',
+      'assets/gallery/photo/seria-3/03.jpg', 'assets/gallery/photo/seria-3/04.jpg',
+      'assets/gallery/photo/seria-3/05.jpg', 'assets/gallery/photo/seria-3/06.jpg',
+      'assets/gallery/photo/seria-3/07.jpg', 'assets/gallery/photo/seria-3/08.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-4/01.jpg',
     title: 'Seria 4',
     images: [
-      'assets/gallery/photo/seria-4/01.jpg',
-      'assets/gallery/photo/seria-4/02.jpg',
-      'assets/gallery/photo/seria-4/03.jpg',
-      'assets/gallery/photo/seria-4/04.jpg',
-      'assets/gallery/photo/seria-4/05.jpg',
-      'assets/gallery/photo/seria-4/06.jpg',
-      'assets/gallery/photo/seria-4/07.jpg',
-      'assets/gallery/photo/seria-4/08.jpg',
-      'assets/gallery/photo/seria-4/09.jpg',
-      'assets/gallery/photo/seria-4/10.jpg',
-      'assets/gallery/photo/seria-4/11.jpg',
-      'assets/gallery/photo/seria-4/12.jpg',
-      'assets/gallery/photo/seria-4/13.jpg',
-      'assets/gallery/photo/seria-4/14.jpg',
-      'assets/gallery/photo/seria-4/15.jpg',
+      'assets/gallery/photo/seria-4/01.jpg', 'assets/gallery/photo/seria-4/02.jpg',
+      'assets/gallery/photo/seria-4/03.jpg', 'assets/gallery/photo/seria-4/04.jpg',
+      'assets/gallery/photo/seria-4/05.jpg', 'assets/gallery/photo/seria-4/06.jpg',
+      'assets/gallery/photo/seria-4/07.jpg', 'assets/gallery/photo/seria-4/08.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-5/01.jpg',
     title: 'Seria 5',
     images: [
-      'assets/gallery/photo/seria-5/01.jpg',
-      'assets/gallery/photo/seria-5/02.jpg',
-      'assets/gallery/photo/seria-5/03.jpg',
-      'assets/gallery/photo/seria-5/04.jpg',
-      'assets/gallery/photo/seria-5/05.jpg',
-      'assets/gallery/photo/seria-5/06.jpg',
-      'assets/gallery/photo/seria-5/07.jpg',
-      'assets/gallery/photo/seria-5/08.jpg',
-      'assets/gallery/photo/seria-5/09.jpg',
-      'assets/gallery/photo/seria-5/10.jpg',
-      'assets/gallery/photo/seria-5/11.jpg',
-      'assets/gallery/photo/seria-5/12.jpg',
-      'assets/gallery/photo/seria-5/13.jpg',
-      'assets/gallery/photo/seria-5/14.jpg',
-      'assets/gallery/photo/seria-5/15.jpg',
+      'assets/gallery/photo/seria-5/01.jpg', 'assets/gallery/photo/seria-5/02.jpg',
+      'assets/gallery/photo/seria-5/03.jpg', 'assets/gallery/photo/seria-5/04.jpg',
+      'assets/gallery/photo/seria-5/05.jpg', 'assets/gallery/photo/seria-5/06.jpg',
+      'assets/gallery/photo/seria-5/07.jpg', 'assets/gallery/photo/seria-5/08.jpg',
+      'assets/gallery/photo/seria-5/09.jpg', 'assets/gallery/photo/seria-5/10.jpg',
+      'assets/gallery/photo/seria-5/11.jpg', 'assets/gallery/photo/seria-5/12.jpg',
+      'assets/gallery/photo/seria-5/13.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-6/01.jpg',
     title: 'Seria 6',
     images: [
-      'assets/gallery/photo/seria-6/01.jpg',
-      'assets/gallery/photo/seria-6/02.jpg',
-      'assets/gallery/photo/seria-6/03.jpg',
-      'assets/gallery/photo/seria-6/04.jpg',
-      'assets/gallery/photo/seria-6/05.jpg',
-      'assets/gallery/photo/seria-6/06.jpg',
-      'assets/gallery/photo/seria-6/07.jpg',
-      'assets/gallery/photo/seria-6/08.jpg',
-      'assets/gallery/photo/seria-6/09.jpg',
-      'assets/gallery/photo/seria-6/10.jpg',
-      'assets/gallery/photo/seria-6/11.jpg',
-      'assets/gallery/photo/seria-6/12.jpg',
-      'assets/gallery/photo/seria-6/13.jpg',
-      'assets/gallery/photo/seria-6/14.jpg',
-      'assets/gallery/photo/seria-6/15.jpg',
+      'assets/gallery/photo/seria-6/01.jpg', 'assets/gallery/photo/seria-6/02.jpg',
+      'assets/gallery/photo/seria-6/03.jpg', 'assets/gallery/photo/seria-6/04.jpg',
+      'assets/gallery/photo/seria-6/05.jpg', 'assets/gallery/photo/seria-6/06.jpg',
+      'assets/gallery/photo/seria-6/07.jpg', 'assets/gallery/photo/seria-6/08.jpg',
+      'assets/gallery/photo/seria-6/09.jpg', 'assets/gallery/photo/seria-6/10.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-7/01.jpg',
     title: 'Seria 7',
     images: [
-      'assets/gallery/photo/seria-7/01.jpg',
-      'assets/gallery/photo/seria-7/02.jpg',
-      'assets/gallery/photo/seria-7/03.jpg',
-      'assets/gallery/photo/seria-7/04.jpg',
-      'assets/gallery/photo/seria-7/05.jpg',
-      'assets/gallery/photo/seria-7/06.jpg',
-      'assets/gallery/photo/seria-7/07.jpg',
-      'assets/gallery/photo/seria-7/08.jpg',
-      'assets/gallery/photo/seria-7/09.jpg',
-      'assets/gallery/photo/seria-7/10.jpg',
-      'assets/gallery/photo/seria-7/11.jpg',
-      'assets/gallery/photo/seria-7/12.jpg',
-      'assets/gallery/photo/seria-7/13.jpg',
-      'assets/gallery/photo/seria-7/14.jpg',
-      'assets/gallery/photo/seria-7/15.jpg',
+      'assets/gallery/photo/seria-7/01.jpg', 'assets/gallery/photo/seria-7/02.jpg',
+      'assets/gallery/photo/seria-7/03.jpg', 'assets/gallery/photo/seria-7/04.jpg',
+      'assets/gallery/photo/seria-7/05.jpg', 'assets/gallery/photo/seria-7/06.jpg',
+      'assets/gallery/photo/seria-7/07.jpg', 'assets/gallery/photo/seria-7/08.jpg',
+      'assets/gallery/photo/seria-7/09.jpg', 'assets/gallery/photo/seria-7/10.jpg',
+      'assets/gallery/photo/seria-7/11.jpg', 'assets/gallery/photo/seria-7/12.jpg'
     ],
   },
   {
     cover: 'assets/gallery/photo/seria-8/01.jpg',
     title: 'Seria 8',
     images: [
-      'assets/gallery/photo/seria-8/01.jpg',
-      'assets/gallery/photo/seria-8/02.jpg',
-      'assets/gallery/photo/seria-8/03.jpg',
-      'assets/gallery/photo/seria-8/04.jpg',
-      'assets/gallery/photo/seria-8/05.jpg',
-      'assets/gallery/photo/seria-8/06.jpg',
-      'assets/gallery/photo/seria-8/07.jpg',
-      'assets/gallery/photo/seria-8/08.jpg',
-      'assets/gallery/photo/seria-8/09.jpg',
-      'assets/gallery/photo/seria-8/10.jpg',
-      'assets/gallery/photo/seria-8/11.jpg',
-      'assets/gallery/photo/seria-8/12.jpg',
-      'assets/gallery/photo/seria-8/13.jpg',
-      'assets/gallery/photo/seria-8/14.jpg',
-      'assets/gallery/photo/seria-8/15.jpg',
+      'assets/gallery/photo/seria-8/01.jpg', 'assets/gallery/photo/seria-8/02.jpg',
+      'assets/gallery/photo/seria-8/03.jpg', 'assets/gallery/photo/seria-8/04.jpg',
+      'assets/gallery/photo/seria-8/05.jpg', 'assets/gallery/photo/seria-8/06.jpg',
+      'assets/gallery/photo/seria-8/07.jpg', 'assets/gallery/photo/seria-8/08.jpg',
+      'assets/gallery/photo/seria-8/09.jpg'
+    ],
+  },
+  {
+    cover: 'assets/gallery/photo/seria-9/01.jpg',
+    title: 'Seria 9',
+    images: [
+      'assets/gallery/photo/seria-9/01.jpg', 'assets/gallery/photo/seria-9/02.jpg',
+      'assets/gallery/photo/seria-9/03.jpg', 'assets/gallery/photo/seria-9/04.jpg',
+      'assets/gallery/photo/seria-9/05.jpg', 'assets/gallery/photo/seria-9/06.jpg',
+      'assets/gallery/photo/seria-9/07.jpg', 'assets/gallery/photo/seria-9/08.jpg',
+      'assets/gallery/photo/seria-9/09.jpg', 'assets/gallery/photo/seria-9/10.jpg',
+      'assets/gallery/photo/seria-9/11.jpg'
     ],
   },
 ];
 
-/* GALERIA EBRU — 3 serie, każda 15 zdjęć */
+/* ─── GALERIA EBRU ─── */
 const GALLERY_EBRU = [
   {
     cover: 'assets/gallery/ebru/seria-1/01.jpg',
     title: 'Seria 1',
     images: [
-      'assets/gallery/ebru/seria-1/01.jpg',
-      'assets/gallery/ebru/seria-1/02.jpg',
-      'assets/gallery/ebru/seria-1/03.jpg',
-      'assets/gallery/ebru/seria-1/04.jpg',
-      'assets/gallery/ebru/seria-1/05.jpg',
-      'assets/gallery/ebru/seria-1/06.jpg',
-      'assets/gallery/ebru/seria-1/07.jpg',
-      'assets/gallery/ebru/seria-1/08.jpg',
-      'assets/gallery/ebru/seria-1/09.jpg',
-      'assets/gallery/ebru/seria-1/10.jpg',
-      'assets/gallery/ebru/seria-1/11.jpg',
-      'assets/gallery/ebru/seria-1/12.jpg',
-      'assets/gallery/ebru/seria-1/13.jpg',
-      'assets/gallery/ebru/seria-1/14.jpg',
+      'assets/gallery/ebru/seria-1/01.jpg', 'assets/gallery/ebru/seria-1/02.jpg',
+      'assets/gallery/ebru/seria-1/03.jpg', 'assets/gallery/ebru/seria-1/04.jpg',
+      'assets/gallery/ebru/seria-1/05.jpg', 'assets/gallery/ebru/seria-1/06.jpg',
+      'assets/gallery/ebru/seria-1/07.jpg', 'assets/gallery/ebru/seria-1/08.jpg',
+      'assets/gallery/ebru/seria-1/09.jpg', 'assets/gallery/ebru/seria-1/10.jpg',
+      'assets/gallery/ebru/seria-1/11.jpg', 'assets/gallery/ebru/seria-1/12.jpg',
+      'assets/gallery/ebru/seria-1/13.jpg', 'assets/gallery/ebru/seria-1/14.jpg',
       'assets/gallery/ebru/seria-1/15.jpg',
     ],
   },
@@ -526,20 +460,13 @@ const GALLERY_EBRU = [
     cover: 'assets/gallery/ebru/seria-2/01.jpg',
     title: 'Seria 2',
     images: [
-      'assets/gallery/ebru/seria-2/01.jpg',
-      'assets/gallery/ebru/seria-2/02.jpg',
-      'assets/gallery/ebru/seria-2/03.jpg',
-      'assets/gallery/ebru/seria-2/04.jpg',
-      'assets/gallery/ebru/seria-2/05.jpg',
-      'assets/gallery/ebru/seria-2/06.jpg',
-      'assets/gallery/ebru/seria-2/07.jpg',
-      'assets/gallery/ebru/seria-2/08.jpg',
-      'assets/gallery/ebru/seria-2/09.jpg',
-      'assets/gallery/ebru/seria-2/10.jpg',
-      'assets/gallery/ebru/seria-2/11.jpg',
-      'assets/gallery/ebru/seria-2/12.jpg',
-      'assets/gallery/ebru/seria-2/13.jpg',
-      'assets/gallery/ebru/seria-2/14.jpg',
+      'assets/gallery/ebru/seria-2/01.jpg', 'assets/gallery/ebru/seria-2/02.jpg',
+      'assets/gallery/ebru/seria-2/03.jpg', 'assets/gallery/ebru/seria-2/04.jpg',
+      'assets/gallery/ebru/seria-2/05.jpg', 'assets/gallery/ebru/seria-2/06.jpg',
+      'assets/gallery/ebru/seria-2/07.jpg', 'assets/gallery/ebru/seria-2/08.jpg',
+      'assets/gallery/ebru/seria-2/09.jpg', 'assets/gallery/ebru/seria-2/10.jpg',
+      'assets/gallery/ebru/seria-2/11.jpg', 'assets/gallery/ebru/seria-2/12.jpg',
+      'assets/gallery/ebru/seria-2/13.jpg', 'assets/gallery/ebru/seria-2/14.jpg',
       'assets/gallery/ebru/seria-2/15.jpg',
     ],
   },
@@ -547,28 +474,19 @@ const GALLERY_EBRU = [
     cover: 'assets/gallery/ebru/seria-3/01.jpg',
     title: 'Seria 3',
     images: [
-      'assets/gallery/ebru/seria-3/01.jpg',
-      'assets/gallery/ebru/seria-3/02.jpg',
-      'assets/gallery/ebru/seria-3/03.jpg',
-      'assets/gallery/ebru/seria-3/04.jpg',
-      'assets/gallery/ebru/seria-3/05.jpg',
-      'assets/gallery/ebru/seria-3/06.jpg',
-      'assets/gallery/ebru/seria-3/07.jpg',
-      'assets/gallery/ebru/seria-3/08.jpg',
-      'assets/gallery/ebru/seria-3/09.jpg',
-      'assets/gallery/ebru/seria-3/10.jpg',
-      'assets/gallery/ebru/seria-3/11.jpg',
-      'assets/gallery/ebru/seria-3/12.jpg',
-      'assets/gallery/ebru/seria-3/13.jpg',
-      'assets/gallery/ebru/seria-3/14.jpg',
+      'assets/gallery/ebru/seria-3/01.jpg', 'assets/gallery/ebru/seria-3/02.jpg',
+      'assets/gallery/ebru/seria-3/03.jpg', 'assets/gallery/ebru/seria-3/04.jpg',
+      'assets/gallery/ebru/seria-3/05.jpg', 'assets/gallery/ebru/seria-3/06.jpg',
+      'assets/gallery/ebru/seria-3/07.jpg', 'assets/gallery/ebru/seria-3/08.jpg',
+      'assets/gallery/ebru/seria-3/09.jpg', 'assets/gallery/ebru/seria-3/10.jpg',
+      'assets/gallery/ebru/seria-3/11.jpg', 'assets/gallery/ebru/seria-3/12.jpg',
+      'assets/gallery/ebru/seria-3/13.jpg', 'assets/gallery/ebru/seria-3/14.jpg',
       'assets/gallery/ebru/seria-3/15.jpg',
     ],
   },
 ];
 
-/* ═══════════════════════════════════
-   KONTAKT
-═══════════════════════════════════ */
+/* ─── KONTAKT ─── */
 const CONTACT = {
   intro:'Chętnie porozmawiam o współpracy, instalacjach, muzyce do filmów i spektakli.',
   links:[
